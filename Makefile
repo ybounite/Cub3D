@@ -1,20 +1,25 @@
 RED    = $(shell printf "\033[31m")
 RESET  = $(shell printf "\033[0m")
 
-CC = cc
-CFLAGS = -Wall -Wextra -Werror
-NAME = cub3D
-RM = rm -rf
+NAME 	= cub3D
+CC		= cc
+CFLAGS	= -Wall -Wextra -Werror
+RM 		= rm -rf
 
-LIBFT_DIR = libraries/libft
-LIBFT = $(LIBFT_DIR)/libft.a
+LIBFT_DIR	= libraries/libft
+LIBFT	= $(LIBFT_DIR)/libft.a
 
 DIR_OBJ = obj
 GETLINE_DIR = libraries/getline
-DIR_SRC = mandatory/
+DIR_SRC	= mandatory
 
 SRC_GETLINE = $(GETLINE_DIR)/get_next_line.c 
-SRC = $(DIR_SRC)main.c
+
+SRC	= $(DIR_SRC)/main.c \
+	  $(DIR_SRC)/check_file_name.c
+
+
+
 SRC += $(SRC_GETLINE)
 
 OBJ = $(patsubst $(DIR_SRC)%.c, $(DIR_OBJ)/%.o, $(filter $(DIR_SRC)%,$(SRC))) \
