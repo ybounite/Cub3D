@@ -6,7 +6,7 @@
 /*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 14:57:09 by ybounite          #+#    #+#             */
-/*   Updated: 2025/06/20 16:45:37 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/06/20 19:22:33 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,16 @@
 # include "../libraries/getline/get_next_line.h"
 # include "../libraries/libft/libft.h"
 
+# define STDERR	2
+# define ALLOC	1
+# define CLEAR	0
+
+typedef struct	s_game
+{
+	short		fd;
+	char		**map;
+	char		**map_cpy;
+}				t_data_game;
 
 /* -------------------------------------------------------------------------- */
 /*                             check_file_name.c                              */
