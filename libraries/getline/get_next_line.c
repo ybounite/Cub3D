@@ -6,145 +6,89 @@
 /*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/23 17:14:22 by ybounite          #+#    #+#             */
-/*   Updated: 2025/05/10 10:24:12 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/06/21 09:41:01 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static int	ft_strchar(char *str, char c)
+static char	*ft_strcher(char *s, int c)
 {
 	unsigned int	i;
+	char			cc;
 
+	cc = (char) c;
 	i = 0;
-	while (str[i])
+	while (s[i])
 	{
-		if (str[i] == c)
-			return (1);
+		if (s[i] == cc)
+			return ((char *) &s[i]);
 		i++;
 	}
-	return (0);
+	if (s[i] == cc)
+		return ((char *) &s[i]);
+	return (NULL);
 }
 
-static char	*chack_if_newline(char *line)
+static char	*fill_line_buffer(int fd, char *remainder, char *buffer)
 {
-	size_t	i;
-	char	*remainder;
+	ssize_t	read_len;
+	char	*tmp;
 
-	i = 0;
-	while (line[i] && line[i] != '\n')
-		i++;
-	if (line[i] == '\0' || line[i + 1] == '\0')
-		return (NULL);
-	remainder = ft_substr(line, i + 1, ft_strlen(line) - i - 1);
-	line[i + 1] = '\0';
-	if (remainder && remainder[0] == '\0')
+	while (1)
 	{
-		remainder = NULL;
+		read_len = read(fd, buffer, BUFFER_SIZE);
+		if (read_len < 0)
+			return (NULL);
+		else if (read_len == 0)
+			break ;
+		buffer[read_len] = 0;
+		if (!remainder)
+			remainder = ft_strdup("");
+		tmp = remainder;
+		remainder = ft_strjoin(tmp, buffer);
+		tmp = NULL;
+		if (ft_strcher(buffer, '\n'))
+			break ;
 	}
 	return (remainder);
 }
 
-static char	*ft_full_buffer_line(int fd, char *buffer, char *remaider)
+static char	*ft_after_new_line(char *line)
 {
-	ssize_t	read_char;
-	char	*ptr;
+	char		*save;
+	size_t		i;
 
-	while (1)
-	{
-		read_char = read(fd, buffer, BUFFER_SIZE);
-		if (read_char == -1)
-			return (remaider = NULL, NULL);
-		else if (read_char == 0)
-			break ;
-		buffer[read_char] = '\0';
-		if (!remaider)
-			remaider = ft_strdup("");
-		ptr = remaider;
-		remaider = ft_strjoin(ptr, buffer);
-		ptr = NULL;
-		if (ft_strchar(buffer, '\n'))
-			break ;
-	}
-	return (remaider);
+	i = 0;
+	while (line[i] != '\n' && line[i] != '\0')
+		i++;
+	if (line[i] == '\0')
+		return (NULL);
+	save = ft_substr(line, i + 1, ft_strlen(line) - i);
+	if (save[0] == '\0')
+		save = NULL;
+	line[i + 1] = '\0';
+	return (save);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*remainder;
-	char		*buffer;
+	static char	*save;
 	char		*line;
+	char		*buffer;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) == -1)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 	{
-		ft_malloc(0, 0);
-		remainder = NULL;
+		save = NULL;
 		return (NULL);
 	}
-	buffer = ft_malloc((BUFFER_SIZE + 1), 1);
+	buffer = ft_malloc(BUFFER_SIZE + 1, 1);
 	if (!buffer)
-		return (remainder = NULL, NULL);
-	line = ft_full_buffer_line(fd, buffer, remainder);
+		return (NULL);
+	line = fill_line_buffer(fd, save, buffer);
 	buffer = NULL;
 	if (!line)
-		return (ft_malloc(0, 0), NULL);
-	remainder = chack_if_newline(line);
+		return (NULL);
+	save = ft_after_new_line(line);
 	return (line);
 }
-
-/*static char	*ft_full_buffer_line(int fd, char *buffer, char *remaider)
-{
-	ssize_t	read_char;
-	char	*ptr;
-	
-	while (1)
-	{
-		read_char = read(fd, buffer, BUFFER_SIZE);
-		if (read_char == -1)
-			return (NULL);
-		else if (read_char == 0)
-			break ;
-		buffer[read_char] = '\0';
-		if (!remaider)
-			remaider = ft_strdup("");
-		ptr = remaider;
-		remaider = ft_strjoin(ptr, buffer);
-		free(ptr);
-		ptr = NULL;
-		if (ft_strcherch(buffer, '\n'))
-			break;
-	}
-	return (remaider);
-}
-char *chack_if_newline(char line)
-{
-	size_t i;
-	char *ptr;
-
-	while (line[i] && linr[i] != '\n')
-		i++;
-	if (line[i] == '\0' && line[i + 1] == '\0')
-		return (NULL);
-	ptr = ft_substr(line, i + 1, ft_strlen(line) - i)
-	i = 0;
-	return (ptr);
-}
-char	*get_next_line(int fd)
-{
-	static	char	*remainder;
-	char	*buffer;
-	char	*line;
-
-	buffer = malloc(BUFFER_SIZE + 1);
-	if (fd < 0 || read(1, 0, 0) == -1 || !buffer)
-	{
-		free(buffer);
-		remainder = NULL;
-		return (NULL);
-	}
-	line = ft_full_buffer_line(fd, buffer, remainder);
-	if (!line)
-		return (frre(line), NULL);
-	remainder = chack_if_newline(line);
-	return (line);
-} */
