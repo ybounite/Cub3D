@@ -3,7 +3,7 @@ RESET  = $(shell printf "\033[0m")
 
 NAME 	= cub3D
 CC		= cc
-CFLAGS	= -Wall -Wextra -Werror
+CFLAGS	= -Wall -Wextra -Werror -g3
 RM 		= rm -rf
 
 LIBFT_DIR	= libraries/libft
@@ -17,8 +17,6 @@ SRC_GETLINE = $(GETLINE_DIR)/get_next_line.c
 
 SRC	= $(DIR_SRC)/main.c \
 	  $(DIR_SRC)/check_file_name.c
-
-
 
 SRC += $(SRC_GETLINE)
 
@@ -59,3 +57,5 @@ fclean: clean
 	@make -C $(LIBFT_DIR) fclean
 	$(RM) $(NAME)
 	$(RM) $(DIR_OBJ)
+
+re: fclean all
