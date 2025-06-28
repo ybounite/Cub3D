@@ -1,25 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstnew_bonus.c                                  :+:      :+:    :+:   */
+/*   syntax_error.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/04 10:47:21 by bamezoua          #+#    #+#             */
-/*   Updated: 2025/06/28 10:45:40 by ybounite         ###   ########.fr       */
+/*   Created: 2025/06/20 19:03:20 by ybounite          #+#    #+#             */
+/*   Updated: 2025/06/28 10:52:11 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../includes/Cub3D.h"
 
-t_list	*ft_lstnew(void *content)
+void	syntax_error(short option)
 {
-	t_list	*new;
-
-	new = malloc(sizeof(t_list));
-	if (new == NULL)
-		return (NULL);
-	new->content = content;
-	new->next = NULL;
-	return (new);
+	if (option == 1)
+		ft_putstr_fd("Error: \nInvalid arguments\n", 2);
 }

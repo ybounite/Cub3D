@@ -16,7 +16,8 @@ DIR_SRC	= mandatory
 SRC_GETLINE = $(GETLINE_DIR)/get_next_line.c 
 
 SRC	= $(DIR_SRC)/main.c \
-	  $(DIR_SRC)/check_file_name.c
+	  $(DIR_SRC)/check_file_name.c\
+	  $(DIR_SRC)/syntax_error.c 
 
 SRC += $(SRC_GETLINE)
 
