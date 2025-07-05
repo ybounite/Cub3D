@@ -16,8 +16,11 @@ DIR_SRC	= mandatory
 SRC_GETLINE = $(GETLINE_DIR)/get_next_line.c 
 
 SRC	= $(DIR_SRC)/main.c \
-	  $(DIR_SRC)/check_file_name.c\
-	  $(DIR_SRC)/syntax_error.c 
+	  $(DIR_SRC)/check_file_name.c \
+	  $(DIR_SRC)/syntax_error.c \
+	  $(DIR_SRC)/game_parser.c  \
+	  $(DIR_SRC)/ft_list_read.c \
+	  $(DIR_SRC)/config_parser.c
 
 SRC += $(SRC_GETLINE)
 
