@@ -6,6 +6,8 @@ CC		= cc
 CFLAGS	= -Wall -Wextra -Werror -g3
 RM 		= rm -rf
 
+MLX = -lmlx -lXext -lX11 -lm
+
 LIBFT_DIR	= libraries/libft
 LIBFT	= $(LIBFT_DIR)/libft.a
 
@@ -20,7 +22,9 @@ SRC	= $(DIR_SRC)/main.c \
 	  $(DIR_SRC)/syntax_error.c \
 	  $(DIR_SRC)/game_parser.c  \
 	  $(DIR_SRC)/ft_list_read.c \
-	  $(DIR_SRC)/config_parser.c
+	  $(DIR_SRC)/config_parser.c \
+	  $(DIR_SRC)/player_init.c \
+	  $(DIR_SRC)/control_key.c
 
 SRC += $(SRC_GETLINE)
 
@@ -34,7 +38,7 @@ $(LIBFT):
 	@make --no-print-directory -C $(LIBFT_DIR) bonus
 
 $(NAME): $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJ) $(MLX) $(LIBFT) -o $(NAME)
 
 	
 $(DIR_OBJ)/%.o: $(DIR_SRC)%.c

@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+		/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   config_parser.c                                    :+:      :+:    :+:   */
@@ -6,7 +6,7 @@
 /*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 12:47:32 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/05 12:47:51 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/07/05 15:15:53 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,33 +30,32 @@ t_texture_type	get_texturs_type(char *line)
 }
 bool	parse_texture_line(t_data_game *_game, char *line)
 {
-    t_texture_type	type;
+	t_texture_type	type;
 	char			*path_start;
 
 	type = get_texturs_type(line);
-    if (type == IDNTIFIER_TEXTURE)
-    {
-        fprintf(stderr, "Error: Unknown texture identifier\n");
-        return false;
-    }
-    if (_game->config->textures[type])
-    {
-        fprintf(stderr, "Error: Duplicate texture definition for %d\n", type);
-        return true;
-    }
-    path_start = line + 2;
-    if (type <= EA_TEXTURE)
-        path_start++; // Skip 3 characters for "NO ", "SO ", etc.
-
-    while (*path_start == ' ')
-        path_start++;
-    _game->config->textures[type] = ft_strdup(path_start);
-    if (!_game->config->textures[type])
-    {
-        fprintf(stderr, "Error: Memory allocation failed\n");
-        return true;
-    }
-    return false;
+	if (type == IDNTIFIER_TEXTURE)
+	{
+		printf("Error: Unknown texture identifier\n");
+		return true;
+	}
+	if (_game->config->textures[type])
+	{
+		printf("Error: Duplicate texture definition for %d\n", type);
+		return true;
+	}
+	path_start = line + 2;
+	if (type <= EA_TEXTURE)
+		path_start++; // Skip 3 characters for "NO ", "SO " ...
+	while (*path_start == ' ')
+		path_start++;
+	_game->config->textures[type] = ft_strdup(path_start);
+	if (!_game->config->textures[type])
+	{
+		printf("Error: Memory allocation failed\n");
+		return true;
+	}
+	return false;
 }
 
 // bool	istexturs(char *line)

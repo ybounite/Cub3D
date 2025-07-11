@@ -6,7 +6,7 @@
 /*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 14:41:31 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/08 18:45:32 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/07/11 10:11:35 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ bool	is_spawm_direction(char c)
 	return (c == 'N' || c == 'S' || c == 'E' || c == 'W');
 }
 
-void	player_position(t_data_game *_game, t_player *_player)
+void	player_position(t_data_game *_game)
 {
 	short	x;
 	short	y;
@@ -111,8 +111,8 @@ void	player_position(t_data_game *_game, t_player *_player)
 			if (is_spawm_direction(_game->map[x][y]))
 			{
 				_game->spawm_dir = _game->map[x][y];
-				_player->_x = x + 0.5;
-				_player->_y = y + 0.5;
+				_game->player->_x = x + 0.5;
+				_game->player->_y = y + 0.5;
 				return ;
 			}
 			y++;
@@ -121,40 +121,40 @@ void	player_position(t_data_game *_game, t_player *_player)
 	}
 }
 
-void	init_player_direction(t_player *_player, char spawn_dir)
+void	init_player_direction(t_data_game *_game, char spawn_dir)
 {
 	if (spawn_dir == 'N') // North ^
 	{
-		_player->_dir_x = 0;
-		_player->_dir_y = -1;
-		_player->_plane_x = 0.66;
-		_player->_plane_y = 0;
+		_game->player->_dir_x = 0;
+		_game->player->_dir_y = -1;
+		// _player->_plane_x = 0.66;
+		// _player->_plane_y = 0;
 	}
 	else if (spawn_dir == 'S') // south 
 	{
-		_player->_dir_x = 0;
-		_player->_dir_y = 1;
-		_player->_plane_x = -0.66;
-		_player->_plane_y = 0;
+		_game->player->_dir_x = 0;
+		_game->player->_dir_y = 1;
+		// _player->_plane_x = -0.66;
+		// _player->_plane_y = 0;
 	}
 	else if (spawn_dir == 'E') // East
 	{
-		_player->_dir_x = 1;
-		_player->_dir_y = 0;
-		_player->_plane_x = 0;
-		_player->_plane_y = 0.66;
+		_game->player->_dir_x = 1;
+		_game->player->_dir_y = 0;
+		// _player->_plane_x = 0;
+		// _player->_plane_y = 0.66;
 	}
 	else if (spawn_dir == 'W') // west
 	{
-		_player->_dir_x = -1;
-		_player->_dir_y = 0;
-		_player->_plane_x = 0;
-		_player->_plane_y = -0.66;
+		_game->player->_dir_x = -1;
+		_game->player->_dir_y = 0;
+		// _player->_plane_x = 0;
+		// _player->_plane_y = -0.66;
 	}
 }
 
-void	player_init(t_data_game *_game, t_player *_player)
+void	player_init(t_data_game *_game)
 {
-	player_position(_game, _player);
-	init_player_direction(_player, _game->spawm_dir);
+	player_position(_game);
+	init_player_direction(_game, _game->spawm_dir);
 }

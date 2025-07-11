@@ -6,7 +6,7 @@
 /*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 10:51:24 by bamezoua          #+#    #+#             */
-/*   Updated: 2025/06/16 15:44:40 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/07/03 16:48:53 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ char	*ft_strdup(const char *s)
 	char	*dest;
 
 	i = 0;
+	if (!s)
+		return NULL;
 	dest = (char *)ft_malloc(ft_strlen(s) + 1, 1);
 	if (dest == NULL)
 		return (NULL);
