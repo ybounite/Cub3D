@@ -6,7 +6,7 @@
 /*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 12:39:41 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/12 10:02:46 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/07/12 15:36:21 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 // {
 	
 // }
+
 char	*remove_space(char *str)
 {
 	short	i;
@@ -60,8 +61,7 @@ void	validate_textures(t_config *_config)
 	i = 0;
 	while (i < 4)
 	{
-		
-		printf("-->%s\n", remove_space(_config->textures[i]));
+		// printf("-->%s\n", remove_space(_config->textures[i]));
 		if (!_config->textures[i] || !check_filename_xpm(remove_space(_config->textures[i]), ".xpm"))
 		{
 			syntax_error(5);
