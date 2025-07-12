@@ -6,13 +6,13 @@
 /*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:41:44 by ybounite          #+#    #+#             */
-/*   Updated: 2025/06/26 13:19:52 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/07/11 19:02:44 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/Cub3D.h"
+#include "../../includes/Cub3D.h"
 
-bool	check_filename_cub(char *file_name, char *str)
+bool	check_filename(char *file_name, char *str)
 {
 	int	i;
 
@@ -32,7 +32,7 @@ bool	check_filename_cub(char *file_name, char *str)
 void	check_file_name(char *file_name)
 {
 	// check if hindel file : 
-	if (!file_name || !check_filename_cub(file_name, ".cub"))
+	if (!file_name || !check_filename(file_name, ".cub"))
 	{
 		ft_putstr_fd("Erroe:\nfile name is incorrect!\n", 2);
 		exit(EXIT_FAILURE);

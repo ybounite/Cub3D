@@ -13,22 +13,22 @@ LIBFT	= $(LIBFT_DIR)/libft.a
 
 DIR_OBJ = obj
 GETLINE_DIR = libraries/getline
-DIR_SRC	= mandatory
-
+SRC_DIR	= mandatory
+PARSING_DIR = $(SRC_DIR)/parsing
 SRC_GETLINE = $(GETLINE_DIR)/get_next_line.c 
 
-SRC	= $(DIR_SRC)/main.c \
-	  $(DIR_SRC)/check_file_name.c \
-	  $(DIR_SRC)/syntax_error.c \
-	  $(DIR_SRC)/game_parser.c  \
-	  $(DIR_SRC)/ft_list_read.c \
-	  $(DIR_SRC)/config_parser.c \
-	  $(DIR_SRC)/player_init.c \
-	  $(DIR_SRC)/control_key.c
+SRC	= $(SRC_DIR)/main.c \
+	  $(PARSING_DIR)/check_file_name.c \
+	  $(PARSING_DIR)/syntax_error.c \
+	  $(PARSING_DIR)/game_parser.c \
+	  $(PARSING_DIR)/list_read.c \
+	  $(PARSING_DIR)/config_parser.c \
+	  $(PARSING_DIR)/validate_textures.c
 
 SRC += $(SRC_GETLINE)
+SRCS += $(SRC_PARS)
 
-OBJ = $(patsubst $(DIR_SRC)%.c, $(DIR_OBJ)/%.o, $(filter $(DIR_SRC)%,$(SRC))) \
+OBJ = $(patsubst $(SRC_DIR)%.c, $(DIR_OBJ)/%.o, $(filter $(SRC_DIR)%,$(SRC))) \
       $(patsubst $(GETLINE_DIR)/%.c, $(DIR_OBJ)/getline/%.o, $(filter $(GETLINE_DIR)/%,$(SRC)))
 
 all: $(DIR_OBJ) $(LIBFT) $(NAME)
@@ -41,8 +41,8 @@ $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) $(MLX) $(LIBFT) -o $(NAME)
 
 	
-$(DIR_OBJ)/%.o: $(DIR_SRC)%.c
-	@mkdir -p $(DIR_OBJ)
+$(DIR_OBJ)/%.o: $(SRC_DIR)%.c
+	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(DIR_OBJ)/getline/%.o: $(GETLINE_DIR)/%.c

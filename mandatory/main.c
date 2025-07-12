@@ -6,7 +6,7 @@
 /*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 15:45:16 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/11 09:48:07 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/07/11 18:34:57 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 	double rad2
 */
 // 32 0
+/*
 void	draw_rect(t_data_game *_game, int x, int y, int color)
 {
     int i, j;
@@ -76,14 +77,13 @@ void	render_map(t_data_game *_game)
 	printf("---->px :  %d | py : %d<----\n", px, py);
 	draw_circle(_game, py, px, 0xFF0000);
 }
-/*
 raduis = 3;
 turndirection = 0;
 walkdirection = 0;
 rotationAngile = PI /2;
 moveSpeed = 2.0;
 rotationSpeed = 2 (PI / 180);
-*/
+
 void	init_window(t_data_game *_game)
 {
 	_game->_mlx = mlx_init();
@@ -94,7 +94,7 @@ void	init_window(t_data_game *_game)
 	// mlx_hook(_game->_win_mlx, 17, 0, _destory_window, &_game->_win_mlx);
 	mlx_loop(_game->_mlx);
 	// _destory_window(_game);
-}
+}*/
 
 int main(int ac, char **av)
 {
@@ -107,18 +107,10 @@ int main(int ac, char **av)
 	_game->player = ft_malloc(sizeof(t_player), ALLOC);
 	ft_bzero(_game->config->textures, sizeof(char *) * TEXTURE_COUNT);
 	if (!parsing(av[1], _game))
-		return 1;
-
-	for (size_t i = 0; _game->map[i]; i++)
-		printf("CHECKING LINE: %s", _game->map[i]);
-
-	for (size_t i = 0; i < TEXTURE_COUNT; i++)
-	{
-		if (_game->config->textures[i])
-			printf("\ntype %zu: %s", i, _game->config->textures[i]);
-	}
-	player_init(_game);
-	init_window(_game);
+		return (ft_malloc(CLEAR, CLEAR), EXIT_FAILURE);
+	
+	// player_init(_game);
+	// init_window(_game);
 	ft_malloc(CLEAR, CLEAR);
-	return 0;
+	return EXIT_SUCCESS;
 }

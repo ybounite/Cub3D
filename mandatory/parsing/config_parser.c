@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/Cub3D.h"
+#include "../../includes/Cub3D.h"
 
 t_texture_type	get_texturs_type(char *line)
 {
@@ -28,6 +28,7 @@ t_texture_type	get_texturs_type(char *line)
 		return C_COLOR;
 	return IDNTIFIER_TEXTURE;
 }
+
 bool	parse_texture_line(t_data_game *_game, char *line)
 {
 	t_texture_type	type;
@@ -35,15 +36,9 @@ bool	parse_texture_line(t_data_game *_game, char *line)
 
 	type = get_texturs_type(line);
 	if (type == IDNTIFIER_TEXTURE)
-	{
-		printf("Error: Unknown texture identifier\n");
-		return true;
-	}
+		return (syntax_error(3), true);
 	if (_game->config->textures[type])
-	{
-		printf("Error: Duplicate texture definition for %d\n", type);
-		return true;
-	}
+		return (syntax_error(2), true);
 	path_start = line + 2;
 	if (type <= EA_TEXTURE)
 		path_start++; // Skip 3 characters for "NO ", "SO " ...
@@ -51,10 +46,7 @@ bool	parse_texture_line(t_data_game *_game, char *line)
 		path_start++;
 	_game->config->textures[type] = ft_strdup(path_start);
 	if (!_game->config->textures[type])
-	{
-		printf("Error: Memory allocation failed\n");
-		return true;
-	}
+		return (syntax_error(4), true);
 	return false;
 }
 
@@ -122,8 +114,7 @@ void	parse_config(t_data_game *_game)
 			parse_texture_line(_game, line);
 		else
 		{
-			ft_putstr_fd("Error\nUnknown line in config: ", STDERR);
-			ft_putendl_fd(line, STDERR);
+			syntax_error(3);
 			ft_malloc(CLEAR, CLEAR);
 			exit(EXIT_FAILURE);
 		}

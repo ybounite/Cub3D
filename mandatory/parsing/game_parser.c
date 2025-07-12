@@ -6,11 +6,11 @@
 /*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 12:45:53 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/09 15:27:34 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/07/11 18:54:57 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/Cub3D.h"
+#include "../../includes/Cub3D.h"
 
 char	**parse_map(t_data_game *_game)
 {
@@ -29,37 +29,6 @@ char	**parse_map(t_data_game *_game)
 	return maps;
 }
 
-bool	isplayer_position(char c)
-{
-	return (c == 'N' || c == 'S' || c == 'E' || c == 'W');
-}
-
-bool	check_allowed_characters(t_data_game *_game)
-{
-	short	player_count;
-	short	y;
-	short	x;
-	char	c;
-	(1) && (player_count = 0), (y = 0);
-	while (_game->map[y])
-	{
-		x = 0;
-		while (_game->map[y][x])
-		{
-			c = _game->map[y][x];
-			if (!isplayer_position(c) && c != '1' && c != '0' && c != ' ' && c != '\n')
-				return (ft_putendl_fd("Error\nInvalid character", STDERR), false);
-			if (isplayer_position(c))
-				player_count++;
-			x++;
-		}
-		y++;
-	}
-	if (player_count != 1)
-		return (ft_putendl_fd("Error\nJest one player position", STDERR), false);
-	return true;
-}
-
 bool	parsing(char *filename, t_data_game *_game)
 {
 	check_file_name(filename);
@@ -70,9 +39,12 @@ bool	parsing(char *filename, t_data_game *_game)
 	if (!_game->list)
 		return (ft_putendl_fd("Error\nMap is empty", STDERR), false);
 	parse_config(_game);
-	_game->map = parse_map(_game);
-	if (!check_allowed_characters(_game))
-		return false;
+	validate_textures(_game->config);
+	// // check this texter in valide ?
+	// _game->map = parse_map(_game);
+	// if (!check_allowed_characters(_game))
+		// return false;
+	// check is all map is close in wall ?
+	// 
 	return (true);
 }
-// valid_characters(_game);

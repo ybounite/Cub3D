@@ -6,7 +6,7 @@
 /*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 14:57:09 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/11 10:09:22 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/07/11 19:03:39 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ typedef struct	s_game
 /* -------------------------------------------------------------------------- */
 /*                             check_file_name.c                              */
 /* -------------------------------------------------------------------------- */
-bool			check_filename_cub(char *file_name, char *str);
+bool			check_filename(char *file_name, char *str);
 void			check_file_name(char *file_name);
 
 /* -------------------------------------------------------------------------- */
@@ -148,5 +148,8 @@ t_texture_type	get_texturs_type(char *line);
 int				_destory_window(t_data_game *_game);
 int				control_key_(int keycode, t_data_game *_game);
 void			render_map(t_data_game *_game);
+// check_filename
+void			validate_textures(t_config *_config);
+
 
 #endif
