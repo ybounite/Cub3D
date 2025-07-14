@@ -6,11 +6,23 @@
 /*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 12:45:53 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/11 18:54:57 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/07/14 15:29:25 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/Cub3D.h"
+
+char	*remove_newline(char *line)
+{
+	if (!line)
+		return NULL;
+	short	i;
+
+	i = ft_strlen(line) - 1;
+	if (line[i] == '\n')
+		line[i] = '\0';
+	return line;
+}
 
 char	**parse_map(t_data_game *_game)
 {
@@ -22,7 +34,7 @@ char	**parse_map(t_data_game *_game)
 	index = 0;
 	while (_game->map_start)
 	{
-		maps[index++] = (char *)_game->map_start->content;
+		maps[index++] = remove_newline(_game->map_start->content);
 		_game->map_start = _game->map_start->next;
 	}
 	maps[index] = NULL;
@@ -41,9 +53,9 @@ bool	parsing(char *filename, t_data_game *_game)
 	parse_config(_game);
 	validate_textures(_game->config);
 	// // check this texter in valide ?
-	// _game->map = parse_map(_game);
-	// if (!check_allowed_characters(_game))
-		// return false;
+	_game->map = parse_map(_game);
+	if (!check_allowed_characters(_game))
+		return false;
 	// check is all map is close in wall ?
 	// 
 	return (true);
