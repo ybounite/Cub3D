@@ -6,11 +6,11 @@
 /*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 16:44:57 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/11 16:53:07 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/07/14 17:55:35 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/Cub3D.h"
+#include "../../includes/Cub3D.h"
 
 bool	isplayer_position(char c)
 {
