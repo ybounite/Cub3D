@@ -6,7 +6,7 @@
 /*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 14:57:09 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/11 19:03:39 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/07/14 16:01:52 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,18 @@
 # define WINDOW_HEIGHT 600
 # define TILE_SIZE 32
 # define PI 3.141592653589793
+# define FOV 60
 # define MOVE_SPEED 1
+
+// color 
+#define WHITE 0xFFFFFF
+#define BLACK 0x000000
+#define RED 0xFF0000
+#define GREEN 0x00FF00
+#define BLUE 0x0000FF
+#define YELLOW 0xFFFF00
+#define GRAY 0x808080
+#define DARK_GRAY 0x404040
 
 typedef enum 
 {
@@ -101,6 +112,11 @@ typedef struct	s_game
 	char		**map_cpy;
 	short		win_w;
 	short		win_h;
+	void		*img;
+	char		*img_addr;
+	int			bp_pixel;
+	int			line_length;
+	int			endian;
 	void		*_mlx;
 	void		*_win_mlx;
 	short		Playr_x;
@@ -139,6 +155,9 @@ void			player_position(t_data_game *_game);
 void			init_player_direction(t_data_game *_game, char spawn_dir);
 void			player_init(t_data_game *_game);
 
+// check_allowed_characters.c
+bool			check_allowed_characters(t_data_game *_game);
+bool			isplayer_position(char c);
 
 
 bool			parse_texture_line(t_data_game *_game, char *line);
@@ -151,5 +170,7 @@ void			render_map(t_data_game *_game);
 // check_filename
 void			validate_textures(t_config *_config);
 
+// _mlx_init
+void		_mlx_init_data(t_data_game *_game);
 
 #endif

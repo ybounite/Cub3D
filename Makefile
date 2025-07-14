@@ -15,6 +15,7 @@ DIR_OBJ = obj
 GETLINE_DIR = libraries/getline
 SRC_DIR	= mandatory
 PARSING_DIR = $(SRC_DIR)/parsing
+RAYCASTING_DIR = $(SRC_DIR)/raycasting
 SRC_GETLINE = $(GETLINE_DIR)/get_next_line.c 
 
 SRC	= $(SRC_DIR)/main.c \
@@ -23,10 +24,12 @@ SRC	= $(SRC_DIR)/main.c \
 	  $(PARSING_DIR)/game_parser.c \
 	  $(PARSING_DIR)/list_read.c \
 	  $(PARSING_DIR)/config_parser.c \
-	  $(PARSING_DIR)/validate_textures.c
+	  $(PARSING_DIR)/validate_textures.c \
+	  $(PARSING_DIR)/check_allowed_characters.c\
+	  $(RAYCASTING_DIR)/player_init.c \
+	  $(RAYCASTING_DIR)/mlx_init_data.c 
 
 SRC += $(SRC_GETLINE)
-SRCS += $(SRC_PARS)
 
 OBJ = $(patsubst $(SRC_DIR)%.c, $(DIR_OBJ)/%.o, $(filter $(SRC_DIR)%,$(SRC))) \
       $(patsubst $(GETLINE_DIR)/%.c, $(DIR_OBJ)/getline/%.o, $(filter $(GETLINE_DIR)/%,$(SRC)))
