@@ -6,7 +6,7 @@
 /*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 12:45:53 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/14 15:29:25 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/07/16 09:42:38 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ bool	parsing(char *filename, t_data_game *_game)
 	parse_config(_game);
 	validate_textures(_game->config);
 	// // check this texter in valide ?
+	// check color is valide 
 	_game->map = parse_map(_game);
 	if (!check_allowed_characters(_game))
 		return false;
