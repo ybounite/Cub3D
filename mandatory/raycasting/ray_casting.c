@@ -6,12 +6,11 @@
 /*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/14 16:53:10 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/15 17:51:11 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/07/16 09:34:18 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/Cub3D.h"
-
 
 void	_player_move(t_data_game *_game, int key)
 {
