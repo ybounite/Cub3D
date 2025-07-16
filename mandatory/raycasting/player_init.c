@@ -6,7 +6,7 @@
 /*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 14:41:31 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/12 19:45:35 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/07/15 17:11:21 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,22 +103,22 @@ void	player_position(t_data_game *_game)
 	short	x;
 	short	y;
 
-	x = 0;
-	while (x < _game->size)
+	y = 0;
+	while (_game->map[y])
 	{
-		y = 0;
-		while (_game->map[x][y])
+		x = 0;
+		while (_game->map[y][x])
 		{
-			if (is_spawm_direction(_game->map[x][y]))
+			if (is_spawm_direction(_game->map[y][x]))
 			{
-				_game->spawm_dir = _game->map[x][y];
+				_game->spawm_dir = _game->map[y][x];
 				_game->player->_x = x + 0.5;
 				_game->player->_y = y + 0.5;
 				return ;
 			}
-			y++;
+			x++;
 		}
-		x++;
+		y++;
 	}
 }
 
