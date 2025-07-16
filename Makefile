@@ -27,7 +27,8 @@ SRC	= $(SRC_DIR)/main.c \
 	  $(PARSING_DIR)/validate_textures.c \
 	  $(PARSING_DIR)/check_allowed_characters.c\
 	  $(RAYCASTING_DIR)/player_init.c \
-	  $(RAYCASTING_DIR)/mlx_init_data.c 
+	  $(RAYCASTING_DIR)/mlx_init_data.c \
+	  $(RAYCASTING_DIR)/ray_casting.c
 
 SRC += $(SRC_GETLINE)
 
