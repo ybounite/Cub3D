@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 14:57:09 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/15 14:45:24 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/07/16 10:40:34 by bamezoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,5 +173,7 @@ void			validate_textures(t_config *_config);
 // _mlx_init
 void		_mlx_init_data(t_data_game *_game);
 void		 start_simulation(t_data_game *_game);
+
+void validate_colors(t_config *_config);
 
 #endif

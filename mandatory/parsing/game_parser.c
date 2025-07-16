@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   game_parser.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 12:45:53 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/16 09:42:38 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/07/16 11:30:15 by bamezoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,12 @@ bool	parsing(char *filename, t_data_game *_game)
 		return (ft_putendl_fd("Error\nMap is empty", STDERR), false);
 	parse_config(_game);
 	validate_textures(_game->config);
-	// // check this texter in valide ?
-	// check color is valide 
+	// // check this texter in valide ? => check mlx_xpm_file_to_image -> use while for 4 textures for check all textures
+	// // in function validate_textures you have while loop can you use it
+
+	//---------------------------------------------------------------------------
+	// check color is valide range {0, 255}
+	validate_colors(_game->config);
 	_game->map = parse_map(_game);
 	if (!check_allowed_characters(_game))
 		return false;

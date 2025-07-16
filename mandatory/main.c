@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 15:45:16 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/15 15:01:08 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/07/16 10:46:37 by bamezoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,10 +83,10 @@ int main(int ac, char **av)
 		return (ft_malloc(CLEAR, CLEAR), EXIT_FAILURE);
 	
 	player_init(_game);
-	for (size_t i = 0; _game->map[i]; i++)
-	{
-		printf("%s\n", _game->map[i]);
-	}
+	// for (size_t i = 0; _game->map[i]; i++)
+	// {
+	// 	printf("%s\n", _game->map[i]);
+	// }
 	_mlx_init_data(_game);
 	start_simulation(_game);
 	// init_window(_game);

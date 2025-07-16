@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validate_textures.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 12:39:41 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/12 15:36:21 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/07/16 11:39:28 by bamezoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,4 +71,42 @@ void	validate_textures(t_config *_config)
 		i++;
 	}
 	
+}
+
+void validate_colors(t_config *_config)
+{
+	short	i;
+	char **split;
+	
+	i = 4;
+	while (i < 6)
+	{
+		// printf("texture %d: %s\n", i, _config->textures[i]);
+		split = ft_split(_config->textures[i], ',');
+		while(*split)
+		{
+			if (ft_strlen(*split) == 0 || ft_atoi(*split) < 0 || ft_atoi(*split) > 255)
+			{
+				printf("Error : Invalid color range [0, 255] in texture\n");
+				syntax_error(6);
+				ft_malloc(CLEAR, CLEAR);
+				exit(EXIT_FAILURE);
+			}
+			split++;
+		}
+		// if(i == 4)
+		// {
+			
+		// 	_config->floor_color = ft_atoi(_config->textures[i]);
+		// 	printf("Floor color: %d\n", _config->floor_color);
+		// }
+		// else if (i == 5)
+		// {
+			
+		// 	_config->ceiling_color = ft_atoi(_config->textures[i]);
+		// 	printf("Ceiling color: %d\n", _config->ceiling_color);
+		// }
+
+		i++;
+	}
 }
