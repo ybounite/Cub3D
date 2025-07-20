@@ -6,7 +6,7 @@
 /*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 12:39:41 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/19 11:19:00 by bamezoua         ###   ########.fr       */
+/*   Updated: 2025/07/20 10:32:05 by bamezoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,12 @@ void	validate_colors(t_config *_config)
 	{
 		// printf("texture %d: %s\n", i, _config->textures[i]);
 		split = ft_split(_config->textures[i], ',');
+		if (!split || ft_strlen(_config->textures[i]) == 0)
+		{
+			printf("Error : Invalid color format in texture\n");
+			ft_malloc(CLEAR, CLEAR);
+			exit(EXIT_FAILURE);
+		}
 		while (*split)
 		{
 			if (ft_strlen(*split) == 0 || ft_atoi(*split) < 0
