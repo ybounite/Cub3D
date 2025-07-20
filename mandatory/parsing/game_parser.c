@@ -6,7 +6,7 @@
 /*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 12:45:53 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/16 11:30:15 by bamezoua         ###   ########.fr       */
+/*   Updated: 2025/07/19 11:48:43 by bamezoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,8 @@ bool	parsing(char *filename, t_data_game *_game)
 	_game->map = parse_map(_game);
 	if (!check_allowed_characters(_game))
 		return false;
-	// check is all map is close in wall ?
-	// 
+	// flood fill check
+	if (!validate_map(_game->map, _game->size))
+		return false;
 	return (true);
 }
