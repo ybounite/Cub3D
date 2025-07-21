@@ -6,7 +6,7 @@
 /*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 14:57:09 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/21 10:24:56 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/07/21 11:27:09 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@
 # define PI 3.141592653589793
 # define FOV 60
 # define MOVE_SPEED 2
-
+# define ROTATION_SPEED 0.2
 // color 
 #define WHITE 0xFFFFFF
 #define BLACK 0x000000
@@ -64,8 +64,8 @@ enum e_keycodes
     S_KEY = 's',
     D_KEY = 'd',
     ESCAPE = 65307,
-    LEFT_ARROW = 123,
-    RIGHT_ARROW = 124
+    LEFT_ARROW = 65361,
+    RIGHT_ARROW = 65363
 };
 
 typedef	enum	s_spawm_direction
@@ -114,12 +114,8 @@ typedef struct	s_game
 	short		size;
 	char		**map;
 	char		**map_cpy;
-	short		win_w;
-	short		win_h;
 	void		*_mlx;
 	void		*_win_mlx;
-	short		Playr_x;
-	short		Playr_y;
 	char		spawm_dir;
 	int		 	map_width;
 	int			map_height;
