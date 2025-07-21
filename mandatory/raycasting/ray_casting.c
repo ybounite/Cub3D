@@ -6,12 +6,12 @@
 /*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/14 16:53:10 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/16 09:34:18 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/07/20 11:50:34 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/Cub3D.h"
-
+/*
 void	_player_move(t_data_game *_game, int key)
 {
 	if (key == S_KEY)
@@ -68,13 +68,13 @@ void	draw_line(t_data_game *_game, int x0, int y0, int x1, int y1)
     int dx = x1 - x0;
     int dy = y1 - y0;
     int steps = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
-	// if (ads(dx) > abd(dy))
+	// if (ads(dx) > abs(dy))
 	// 	steps = abs(dx);
 	// else
 	// 	steps = abs(dy);
     float x_inc = dx / (float)steps;
     float y_inc = dy / (float)steps;
-    float x = x0;
+    float x = x0
     float y = y0;
 
     for (int i = 0; i <= steps; i++)
@@ -153,10 +153,11 @@ void	 start_simulation(t_data_game *_game)
 {
 	mlx_hook(_game->_win_mlx, KeyPress, KeyPressMask, control_key_, _game);
 	// mlx_loop_hook(_game->_mlx, render, _game);
-	render(_game);
-	// render_map(_game);
+	// render(_game);
+	render_map(_game);
 	// mlx_hook(_game->_win_mlx, KeyPress, KeyPressMask, control_key_, _game);
 	// mlx_hook(_game->_win_mlx, 17, 0, _destory_window, &_game->_win_mlx);
 	// mlx_loop(_game->_mlx);
 	// _destory_window(_game);
 }
+*/
