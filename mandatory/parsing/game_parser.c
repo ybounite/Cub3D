@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   game_parser.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 12:45:53 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/19 11:48:43 by bamezoua         ###   ########.fr       */
+/*   Updated: 2025/07/20 18:46:33 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,12 @@ bool	parsing(char *filename, t_data_game *_game)
 	// check color is valide range {0, 255}
 	validate_colors(_game->config);
 	_game->map = parse_map(_game);
+	_game->map_height = _game->size;
+	_game->map_width = (int)ft_strlen(_game->map[1]);
+    printf("map height or rows %d\n", _game->map_height); //rows
+	printf("map whidth or cols %d\n", _game->map_width); //cols
+	for (int i =0; _game->map[i]; i++)
+		printf("line[%d] : %s\n", i,_game->map[i]);
 	if (!check_allowed_characters(_game))
 		return false;
 	// flood fill check
