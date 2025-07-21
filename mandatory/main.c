@@ -3,71 +3,112 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 15:45:16 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/16 10:46:37 by bamezoua         ###   ########.fr       */
+/*   Updated: 2025/07/21 10:24:56 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Cub3D.h"
 
-// bool	validate_map(t_data_game *_game)
-/*
-	sin(&) = opposite/hypotenuse
-	cos(&) = adjacent/hypotenuse
-	tan(&) = opposite/adjacent    
-	hypotenuse^2 = opposite^2 + adjacent^2  
-	double rad2
-*/
-/*
-void	draw_circle(t_data_game *_game, int cx, int cy, int color)
+
+void	_player_move(int key, t_data_game *_game)
 {
-	int radius = 4;
-    for (int y = -radius; y <= radius; y++)
+	if (key == S_KEY)
+	{
+		_game->player->_x += cos(_game->player->angle) * MOVE_SPEED;
+		_game->player->_y += sin(_game->player->angle) * MOVE_SPEED;
+	}
+	else if (key == W_KEY)
+	{
+		_game->player->_x += cos(_game->player->angle + M_PI) * MOVE_SPEED;
+		_game->player->_y += sin(_game->player->angle + M_PI) * MOVE_SPEED;
+	}
+	else if (key == D_KEY)
+	{
+		_game->player->_x += cos(_game->player->angle - M_PI_2) * MOVE_SPEED;
+		_game->player->_y += sin(_game->player->angle - M_PI_2) * MOVE_SPEED;
+	}
+	else if (key == A_KEY)
+	{
+		_game->player->_x += cos(_game->player->angle + M_PI_2) * MOVE_SPEED;
+		_game->player->_y += sin(_game->player->angle + M_PI_2) * MOVE_SPEED;
+	}
+}
+void	my_mlx_pixel_put(t_imag *_img, int x, int y, int color)
+{
+	char	*dst;
+	if (x < 0 || y < 0 || x >= _img->width || y >= _img->height)
+		return ;
+	dst = _img->addr + (y * _img->line_length + x * (_img->bits_per_pixel / 8));
+	*(unsigned int*)dst = color;
+}
+void	clear_image(t_imag *img, int color)
+{
+
+    int y = 0;
+    int x;
+    while (y < img->height)
     {
-        for (int x = -radius; x <= radius; x++)
+        x = 0;
+        while (x < img->width)
         {
-            if (x * x + y * y <= radius * radius)
-                mlx_pixel_put(_game->_mlx, _game->_win_mlx, cx + x, cy + y, color);
+            my_mlx_pixel_put(img, x, y, color);
+            x++;
         }
+        y++;
     }
 }
-void	render_map(t_data_game *_game)
+
+int	render(t_data_game *_game)
 {
-	short	(y), (x);
-	int		color;
+	static short	frame;
+	if (frame == 100){
+		// clear_image(_game->_img, BLACK);
+		draw_map(_game);
+		
+        mlx_put_image_to_window(_game->_mlx, _game->_win_mlx, _game->_img->img, 0, 0);
 
-	y = 0;
-	while (_game->map[y])
-	{
-		x = 0;
-		while (_game->map[y][x])
-		{
-			if (_game->map[y][x] == '1')
-				color = 0x444477;
-			else if (_game->map[y][x] == '0')
-				color = 0xCCC666;
-			else 
-				color = 0x000000;
-			draw_rect(_game, x * TILE_SIZE, y * TILE_SIZE, color);
-			x++;
-		}
-		y++;
+		frame = 0;
 	}
-	int px = (int)_game->player->_x * TILE_SIZE + TILE_SIZE / 2;
-	int py = (int)_game->player->_y * TILE_SIZE + TILE_SIZE / 2;
-	printf("---->px :  %d | py : %d<----\n", px, py);
-	// draw_circle(_game, py, px, 0xFF0000);
+	frame++;
+	return 0;
 }
-*/
-// raduis = 3;
-// turndirection = 0;
-// walkdirection = 0;
-// rotationAngile = PI /2;
-// moveSpeed = 2.0;
-// rotationSpeed = 2 (PI / 180);
 
+int is_wall(t_data_game *_game, double x, double y)
+{
+    int grid_x = (int)(x / TILE_SIZE);
+    int grid_y = (int)(y / TILE_SIZE);
+
+    if (grid_x < 0 || grid_y < 0 || grid_y >= _game->map_height || grid_x >= _game->map_width)
+        return 1;
+    char c = _game->map[grid_y][grid_x];
+	// printf("Postion x : %d, y : %d\n", grid_x, grid_y);
+    if (c == '1')
+        return 1;
+    return 0;
+}
+
+int	control_key_(int keycode, t_data_game *_game){
+	double	old_player_x = _game->player->_x;
+	double	old_player_y = _game->player->_y;
+
+	if (keycode == ESCAPE)
+	{
+		mlx_destroy_window(_game->_mlx, _game->_win_mlx);
+		ft_malloc(CLEAR, CLEAR);
+		exit(EXIT_SUCCESS);
+	}
+	_player_move(keycode, _game);
+	if (is_wall(_game, _game->player->_x, _game->player->_y)){
+		_game->player->_x = old_player_x;
+	 	_game->player->_y = old_player_y;
+	}
+	// render(_game);
+	// renderPlayer(_game);
+	return (true);
+}
 
 int main(int ac, char **av)
 {
@@ -79,16 +120,22 @@ int main(int ac, char **av)
 	_game->config = ft_malloc(sizeof(t_config), ALLOC);
 	_game->player = ft_malloc(sizeof(t_player), ALLOC);
 	ft_bzero(_game->config->textures, sizeof(char *) * TEXTURE_COUNT);
+	_game->_img = ft_malloc(sizeof(t_imag), ALLOC);
 	if (!parsing(av[1], _game))
 		return (ft_malloc(CLEAR, CLEAR), EXIT_FAILURE);
-	
 	player_init(_game);
-	// for (size_t i = 0; _game->map[i]; i++)
-	// {
-	// 	printf("%s\n", _game->map[i]);
-	// }
+	_game->player->_x = (_game->player->_x * TILE_SIZE) + TILE_SIZE / 2;
+	_game->player->_y = (_game->player->_y * TILE_SIZE) + TILE_SIZE / 2;
+	printf("poist p_x : %f\n", _game->player->_x);
+	printf("poist p_y : %f\n", _game->player->_y);
+
 	_mlx_init_data(_game);
-	start_simulation(_game);
+    mlx_hook(_game->_win_mlx, KeyPress, KeyPressMask, control_key_, _game);
+
+    mlx_loop_hook(_game->_mlx, render, _game);
+	mlx_loop(_game->_mlx);
+	// _mlx_init_data(_game);
+	// start_simulation(_game);
 	// init_window(_game);
 	ft_malloc(CLEAR, CLEAR);
 	return EXIT_SUCCESS;
