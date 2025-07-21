@@ -6,7 +6,7 @@
 /*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 15:45:16 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/21 10:24:56 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/07/21 13:25:20 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,13 +61,33 @@ void	clear_image(t_imag *img, int color)
     }
 }
 
+void	draw_ray(t_data_game *_game, double angle, int color)
+{
+    double rx = _game->player->_x;
+    double ry = _game->player->_y;
+    double dx = cos(angle);
+    double dy = sin(angle);
+    while (true) {
+        int map_x = (int)(rx / TILE_SIZE);
+        int map_y = (int)(ry / TILE_SIZE);
+        if (_game->map[map_y][map_x] == '1')
+            break;
+        if (rx < 0 || ry < 0 || map_x >= _game->map_width || map_y >= _game->map_height)
+            break;
+        my_mlx_pixel_put(_game->_img, (int)rx, (int)ry, color);
+        rx += dx;
+        ry += dy;
+    }
+}
+
 int	render(t_data_game *_game)
 {
 	static short	frame;
 	if (frame == 100){
 		// clear_image(_game->_img, BLACK);
 		draw_map(_game);
-		
+		// 
+		draw_ray(_game, _game->player->angle, BLACK);
         mlx_put_image_to_window(_game->_mlx, _game->_win_mlx, _game->_img->img, 0, 0);
 
 		frame = 0;
@@ -90,7 +110,8 @@ int is_wall(t_data_game *_game, double x, double y)
     return 0;
 }
 
-int	control_key_(int keycode, t_data_game *_game){
+int	control_key_(int keycode, t_data_game *_game)
+{
 	double	old_player_x = _game->player->_x;
 	double	old_player_y = _game->player->_y;
 
@@ -105,8 +126,21 @@ int	control_key_(int keycode, t_data_game *_game){
 		_game->player->_x = old_player_x;
 	 	_game->player->_y = old_player_y;
 	}
-	// render(_game);
-	// renderPlayer(_game);
+	if (keycode == LEFT_ARROW){
+		_game->player->angle -= ROTATION_SPEED;
+		printf("angle LEFT : %f\n", _game->player->angle);
+		if (_game->player->angle < 0){
+			
+			_game->player->angle += 2 * PI;
+			printf("updat angle LEFT : %f\n", _game->player->angle);
+		}
+	}
+	else if (keycode == RIGHT_ARROW){
+		_game->player->angle += ROTATION_SPEED;
+		printf("angle RIGTH : %f\n", _game->player->angle);
+		if (_game->player->angle >= 2)
+			_game->player->angle -= 2 * PI; // keep angle 
+	}
 	return (true);
 }
 
