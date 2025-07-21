@@ -6,7 +6,7 @@
 /*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 14:41:31 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/21 10:07:19 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/07/21 11:46:55 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,15 +125,22 @@ void	player_position(t_data_game *_game)
 void	init_player_direction(t_data_game *_game, char spawn_dir)
 {
 	if (spawn_dir == 'N') // North ^
-		_game->player->angle = PI / 2;
+		_game->player->angle = PI / 2; // (1.57) 90°
 	else if (spawn_dir == 'S') // south 
 		_game->player->angle = PI * 1.5;
 	else if (spawn_dir == 'E') // East
-		_game->player->angle = 0;
+		_game->player->angle = 0; // or 2PI (6.28) [0° / 360°]
 	else if (spawn_dir == 'W') // west
-		_game->player->angle = PI;
+		_game->player->angle = PI; // (3.14)
 }
-
+/*   π/2 (1.57) [90°] [N]
+                 ↑
+                 |
+[W] π (3.14) ← player → 0 or 2π (6.28) [0° / 360°] [E]
+                 |
+                 ↓
+    3π/2 (4.71) [270°] [S]
+*/
 void	player_init(t_data_game *_game)
 {
 	player_position(_game);
