@@ -6,7 +6,7 @@
 /*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 14:41:31 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/15 17:11:21 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/07/21 10:07:19 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,9 +112,9 @@ void	player_position(t_data_game *_game)
 			if (is_spawm_direction(_game->map[y][x]))
 			{
 				_game->spawm_dir = _game->map[y][x];
-				_game->player->_x = x + 0.5;
-				_game->player->_y = y + 0.5;
-				return ;
+				_game->player->_x = x;
+				_game->player->_y = y;
+				break ;
 			}
 			x++;
 		}
@@ -125,13 +125,13 @@ void	player_position(t_data_game *_game)
 void	init_player_direction(t_data_game *_game, char spawn_dir)
 {
 	if (spawn_dir == 'N') // North ^
-		_game->player->rotationAngle = PI / 2;
+		_game->player->angle = PI / 2;
 	else if (spawn_dir == 'S') // south 
-		_game->player->rotationAngle = PI * 1.5;
+		_game->player->angle = PI * 1.5;
 	else if (spawn_dir == 'E') // East
-		_game->player->rotationAngle = 0;
+		_game->player->angle = 0;
 	else if (spawn_dir == 'W') // west
-		_game->player->rotationAngle = PI;
+		_game->player->angle = PI;
 }
 
 void	player_init(t_data_game *_game)
