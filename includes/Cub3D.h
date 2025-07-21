@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 14:57:09 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/19 11:36:51 by bamezoua         ###   ########.fr       */
+/*   Updated: 2025/07/21 10:24:56 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 # define TILE_SIZE 32
 # define PI 3.141592653589793
 # define FOV 60
-# define MOVE_SPEED 1
+# define MOVE_SPEED 2
 
 // color 
 #define WHITE 0xFFFFFF
@@ -88,21 +88,25 @@ typedef struct s_player
 {
 	double		_x;
 	double		_y;
-    double		_dir_x;
-    double		_dir_y;
+	double		angle;
+}				t_player;
 
+typedef struct s_point
+{
+	double		x;
+	double		y;
+}				t_point;
 
-    double rotationAngle;
-    double moveSpeed;
-    double rotationSpeed;
-
-    int walkdirection;
-    int turndirection;
-	double		_plane_x;
-	double		_plane_y;
-	short		turn_direction;
-	double		rotation_andle;
-}		t_player;
+typedef struct	s_imag
+{
+	void		*img;
+	char		*addr;
+	int			bits_per_pixel;
+	int			line_length;
+	int			endian;
+	int			width;
+	int			height;
+}				t_imag;
 
 typedef struct	s_game
 {
@@ -112,16 +116,14 @@ typedef struct	s_game
 	char		**map_cpy;
 	short		win_w;
 	short		win_h;
-	void		*img;
-	char		*img_addr;
-	int			bp_pixel;
-	int			line_length;
-	int			endian;
 	void		*_mlx;
 	void		*_win_mlx;
 	short		Playr_x;
 	short		Playr_y;
 	char		spawm_dir;
+	int		 	map_width;
+	int			map_height;
+	t_imag		*_img;
 	t_list		*list;
 	t_list		*map_start;
 	t_config	*config;
@@ -171,8 +173,14 @@ void			render_map(t_data_game *_game);
 void			validate_textures(t_config *_config);
 
 // _mlx_init
-void		_mlx_init_data(t_data_game *_game);
-void		 start_simulation(t_data_game *_game);
+bool			_mlx_init_data(t_data_game *_game);
+void			 start_simulation(t_data_game *_game);
+
+/* -------------------------------------------------------------------------- */
+/*                             map_renderer.c                                 */
+/* -------------------------------------------------------------------------- */
+void					draw_map(t_data_game *_game);
+void					my_mlx_pixel_put(t_imag *_img, int x, int y, int color);
 
 void validate_colors(t_config *_config);
 void map_is_closed(char **map, short size);
