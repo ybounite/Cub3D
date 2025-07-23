@@ -6,7 +6,7 @@
 /*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 15:45:16 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/21 13:25:20 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/07/23 11:39:07 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,8 @@ void	draw_ray(t_data_game *_game, double angle, int color)
 {
     double rx = _game->player->_x;
     double ry = _game->player->_y;
-    double dx = cos(angle);
-    double dy = sin(angle);
+    double dx = cos(angle) * -1;
+    double dy = sin(angle) * -1;
     while (true) {
         int map_x = (int)(rx / TILE_SIZE);
         int map_y = (int)(ry / TILE_SIZE);
@@ -130,7 +130,6 @@ int	control_key_(int keycode, t_data_game *_game)
 		_game->player->angle -= ROTATION_SPEED;
 		printf("angle LEFT : %f\n", _game->player->angle);
 		if (_game->player->angle < 0){
-			
 			_game->player->angle += 2 * PI;
 			printf("updat angle LEFT : %f\n", _game->player->angle);
 		}
