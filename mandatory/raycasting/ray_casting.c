@@ -6,158 +6,185 @@
 /*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/14 16:53:10 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/20 11:50:34 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/07/31 14:11:34 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/Cub3D.h"
-/*
-void	_player_move(t_data_game *_game, int key)
-{
-	if (key == S_KEY)
-	{
-		_game->player->_x += cos(_game->player->rotationAngle) * MOVE_SPEED;
-		_game->player->_y += sin(_game->player->rotationAngle) * MOVE_SPEED;
-	}
-	else if (key == W_KEY)
-	{
-		_game->player->_x += cos(_game->player->rotationAngle + M_PI) * MOVE_SPEED;
-		_game->player->_y += sin(_game->player->rotationAngle + M_PI) * MOVE_SPEED;
-	}
-	else if (key == D_KEY)
-	{
-		_game->player->_x += cos(_game->player->rotationAngle - M_PI_2) * MOVE_SPEED;
-		_game->player->_y += sin(_game->player->rotationAngle - M_PI_2) * MOVE_SPEED;
-	}
-	else if (key == A_KEY)
-	{
-		_game->player->_x += cos(_game->player->rotationAngle + M_PI_2) * MOVE_SPEED;
-		_game->player->_y += sin(_game->player->rotationAngle + M_PI_2) * MOVE_SPEED;
-	}
-}
 
-void	put_pixel_img(t_data_game *_game, int x, int y, int color)
-{
-    char *dst;
+// bool	is_perpendicular_to_Yaxis(double ray_angle)
+// {
+// 	return (ray_angle == 0 || ray_angle == PI);
+// }
+// bool	is_perpendicular_to_Xaxis(double ray_angle)
+// {
+// 	return (ray_angle == 1.5 * PI || ray_angle == PI / 2);
+// }
+// bool	isfacing_up(double rotation_angle)
+// {
+// 	return (rotation_angle > PI && rotation_angle < 2 * PI);
+// }
+// bool	isfacing_down(double rotation_angle)
+// {
+// 	return (rotation_angle < PI && rotation_angle > 0);
+// }
+// bool	isfacing_left(double rotation_angle)
+// {
+// 	return (rotation_angle > PI / 2 && rotation_angle < 1.5 *PI);
+// }
+// bool	isfacing_right(double rotation_angle)
+// {
+// 	return (rotation_angle >= 1.5 * PI || rotation_angle <= PI / 2);
+// }
+// int inside_bounds(t_data_game *data, double x, double y) 
+// {
+//     (void)data;
+//     if (x < 0 || x >= WINDOW_WIDTH || y < 0 || y >= WINDOW_HEIGHT)
+//         return 0;
+//     return 1;
+// }
+// void    normalize_angle(double *angle)
+// {
+//     (*angle) = fmod(*angle, 2 * PI);
+//     if (*angle < 0)
+//         (*angle) += 2 * PI;
+// }
+// // 
+// void	calculate_first_horizountal_interseaction(t_data_game *_game, t_ray *ray, double tan_value)
+// {
+//     if (isfacing_up(ray->ray_angle))
+//         ray->first_y = floor(_game->player->_y / TILE_SIZE) * TILE_SIZE;
+//     else
+//         ray->first_y = (floor(_game->player->_y / TILE_SIZE) + 1) * TILE_SIZE;
+//     ray->first_x = _game->player->_x + (ray->first_y - _game->player->_y) / tan_value;
+// }
 
-    if (x < 0 || x >= WINDOW_WIDTH || y < 0 || y >= WINDOW_HEIGHT)
-        return;  // safety check
+// void    calc_horizontal_step(t_ray *ray, double tan_val)
+// {
+//     if (isfacing_up(ray->ray_angle))
+//         ray->step_y = -TILE_SIZE;
+//     else
+//         ray->step_y = TILE_SIZE;
+//     ray->step_x = TILE_SIZE / fabs(tan_val);
+//     if (isfacing_left(ray->ray_angle))
+//         ray->step_x = -(ray->step_x);
+// }
 
-    dst = _game->img_addr + (y * _game->line_length + x * (_game->bp_pixel / 8));
-    *(unsigned int*)dst = color;
-}
+// void	check_horizontal_intersect(t_data_game *_game, t_ray *ray)
+// {
+// 	double	tan_value;
+// 	normalize_angle(&ray->ray_angle);
+// 	if (is_perpendicular_to_Yaxis(ray->ray_angle))
+// 	{
+// 		if (ray->ray_angle >= 1.5 * PI || ray->ray_angle <= PI / 2)
+// 			ray->h_Interseaction.x = _game->player->_x + WINDOW_WIDTH;
+// 		else
+// 			ray->h_Interseaction.x = _game->player->_x - WINDOW_WIDTH;
+// 		ray->h_Interseaction.y = _game->player->_y;
+// 		return ;
+// 	}
+// 	tan_value = tan(ray->ray_angle);
+// 	if (fabs(tan_value) <= 0.000001){
+// 		if (tan_value >= 0)
+//             tan_value = 0.000001;
+//         else
+//             tan_value = -0.000001;
+// 	}
+// 	calculate_first_horizountal_interseaction(_game, ray, tan_value);
+// 	calc_horizontal_step(ray, tan_value);
+// 	ray->h_Interseaction.x = ray->first_x;
+//     ray->h_Interseaction.y = ray->first_y;
+//     while (!is_wall(_game, ray->h_Interseaction.x, ray->h_Interseaction.y - isfacing_up(ray->ray_angle))
+// 			&& inside_bounds(_game, ray->h_Interseaction.x, ray->h_Interseaction.y)) {
+//         ray->h_Interseaction.x += ray->step_x;
+//         ray->h_Interseaction.y += ray->step_y;
+//     }
+// }
+// // vertical 
+// void    calc_first_v_intersect(t_data_game *data, t_ray *ray, double tan_val)
+// {
+//     if (isfacing_right(ray->ray_angle))
+//         ray->first_x = (floor(data->player->_x / TILE_SIZE) + 1) * TILE_SIZE;
+//     else
+//         ray->first_x = floor(data->player->_x / TILE_SIZE) * TILE_SIZE;
+//     ray->first_y = data->player->_y + (ray->first_x - data->player->_x) * tan_val;
+// }
+// void    calc_vertical_step(t_data_game *data, t_ray *ray, double tan_val)
+// {
+//     (void)data;
+//     if (isfacing_right(ray->ray_angle))
+//         ray->step_x = TILE_SIZE;
+//     else
+//         ray->step_x = -TILE_SIZE;
+//     ray->step_y = TILE_SIZE * fabs(tan_val);
+//     if (isfacing_up(ray->ray_angle))
+//         ray->step_y = -ray->step_y;
+// }
 
-void	draw_rect(t_data_game *_game, int start_x, int start_y, int color)
-{
-    int i, j;
+// void check_vertical_intersect(t_data_game *data, t_ray *ray)
+// {
+//     double tan_val;
+//     normalize_angle(&ray->ray_angle);
+//     if (is_perpendicular_to_Xaxis(ray->ray_angle))
+//     {
+//         ray->v_intersect.x = data->player->_x;
+//         if (isfacing_up(ray->ray_angle))
+//             ray->v_intersect.y = data->player->_y + WINDOW_WIDTH;
+//         else
+//             ray->v_intersect.y = data->player->_y - WINDOW_WIDTH;
+//         return ;
+//     }
+//     tan_val = tan(ray->ray_angle);
+//     calc_first_v_intersect(data, ray, tan_val);
+//     calc_vertical_step(data, ray, tan_val);
+//     ray->v_intersect.x = ray->first_x;
+//     ray->v_intersect.y = ray->first_y;
+//     while (!is_wall(data, ray->v_intersect.x - isfacing_left(ray->ray_angle), ray->v_intersect.y) 
+// 		&& inside_bounds(data, ray->v_intersect.x, ray->v_intersect.y)) {
+//         ray->v_intersect.x += ray->step_x;
+//         ray->v_intersect.y += ray->step_y;
+//     }
+// }
+// void    calc_distance(t_data_game *data, t_ray *ray, int *color)
+// {
+//     ray->h_dist = (ray->h_Interseaction.x - data->player->_x) * (ray->h_Interseaction.x - data->player->_x) + (ray->h_Interseaction.y - data->player->_y) * (ray->h_Interseaction.y - data->player->_y);
+//     ray->v_dist = (ray->v_intersect.x - data->player->_x) * (ray->v_intersect.x - data->player->_x) + (ray->v_intersect.y - data->player->_y) * (ray->v_intersect.y - data->player->_y);
 
-	i = 0;
-    while (i < TILE_SIZE)
-	{
-		j = 0;
-		while (j < TILE_SIZE)
-		{
-			put_pixel_img(_game, start_x + i, start_y + j, color);
-			j++;
-		}
-		i++;
-	}
-}
-void	draw_line(t_data_game *_game, int x0, int y0, int x1, int y1)
-{
-    int dx = x1 - x0;
-    int dy = y1 - y0;
-    int steps = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
-	// if (ads(dx) > abs(dy))
-	// 	steps = abs(dx);
-	// else
-	// 	steps = abs(dy);
-    float x_inc = dx / (float)steps;
-    float y_inc = dy / (float)steps;
-    float x = x0
-    float y = y0;
+//     if (ray->h_dist < ray->v_dist)
+//     {
+//         *color = 0xaa0000;
+//         ray->distance = sqrt(ray->h_dist);
+//         ray->ray_end.x = ray->h_Interseaction.x;
+//         ray->ray_end.y = ray->h_Interseaction.y;
+//     } else 
+//     {
+//         *color = 0xff0000;
+//         ray->distance = sqrt(ray->v_dist);
+//         ray->ray_end.x = ray->v_intersect.x;
+//         ray->ray_end.y = ray->v_intersect.y;
+//     }
+//     ray->distance *= cos(ray->ray_angle - data->player->angle);
+// 	draw_line(data, ray->player, ray->ray_end, BLUE);
+//     // draw_line(data, ray->player, ray->ray_end, BLUE, 2);
+// }
+// void	raycasting(t_data_game *_game)
+// {
+// 	t_ray	ray;
+// 	short	i = 0;
+//     int     color;
 
-    for (int i = 0; i <= steps; i++)
-    {
-        put_pixel_img(_game, (int)x, (int)y, WHITE);
-        x += x_inc;
-        y += y_inc;
-    }
-}
+// 	// init data ray
+// 	ray.ray_angle = _game->player->angle - (FOV / 2);
+// 	ray.step_angle = FOV / NUM_RAYS;
+// 	ray.distance = 0;
+// 	ray.player.x = _game->player->_x;
+// 	ray.player.y = _game->player->_y;
 
-
-int		render(t_data_game *_game)
-{
-	// draw maps
-	int color;
-	for (short y = 0; y < _game->size; y++){
-		for (short x = 0; x < (short)ft_strlen(_game->map[y]); x++){
-			if (_game->map[y][x] == '1')
-				color = 0x444477;
-			else if (_game->map[y][x] == '0')
-				color = 0xCCC666;
-			else 
-				color = 0x000000;
-			//  				x				y
-			draw_rect(_game, x * TILE_SIZE, y * TILE_SIZE, color);
-		}
-	}
-	// draw player
-	int px = (int)_game->player->_x * TILE_SIZE + TILE_SIZE / 2;
-	int py = (int)_game->player->_y * TILE_SIZE + TILE_SIZE / 2;
-	printf("pos x : %f\n", _game->player->_x);
-	printf("pos y : %f\n", _game->player->_y);
-	short dy = -5;
-	short dx;
-	while (dy <= 5)
-	{
-		dx = -5;
-		while (dx <= 5)
-		{
-			if (pow(dx, 2) + pow(dy, 2) <= 25)
-				put_pixel_img(_game, px+dx, py+dy, RED);
-			dx++;
-		}
-		dy++;
-	}
-
-
-	// int line_length = 30;
-	// dx = cos(_game->player->rotationAngle) * line_length;
-	// dy = sin(_game->player->rotationAngle) * line_length;
-	// draw_line(_game, px, py, px + dx, py + dy);
-	draw_line(_game, px, py, px + 25, py);
-	mlx_put_image_to_window(_game->_mlx, _game->_win_mlx, _game->img, 0, 0);
-	mlx_loop(_game->_mlx);
-	return 0;
-}
-
-int		control_key_(int keycode, t_data_game *_game)
-{
-	// double	old_player_x = _game->player->_x;
-	// double	old_player_y = _game->player->_y;
-
-	if (keycode == ESCAPE)
-	{
-		mlx_destroy_window(_game->_mlx, _game->_win_mlx);
-		ft_malloc(CLEAR, CLEAR);
-		exit(EXIT_SUCCESS);
-	}
-	_player_move(_game, keycode);
-	render(_game);
-	// renderPlayer(_game);
-	return (true);
-}
-
-void	 start_simulation(t_data_game *_game)
-{
-	mlx_hook(_game->_win_mlx, KeyPress, KeyPressMask, control_key_, _game);
-	// mlx_loop_hook(_game->_mlx, render, _game);
-	// render(_game);
-	render_map(_game);
-	// mlx_hook(_game->_win_mlx, KeyPress, KeyPressMask, control_key_, _game);
-	// mlx_hook(_game->_win_mlx, 17, 0, _destory_window, &_game->_win_mlx);
-	// mlx_loop(_game->_mlx);
-	// _destory_window(_game);
-}
-*/
+// 	while (i < NUM_RAYS)
+// 	{
+//         check_horizontal_intersect(_game, &ray);
+// 		check_horizontal_intersect(_game, &ray);
+//         calc_distance(_game, &ray, &color);
+// 		i++;
+// 	}		
+// }
