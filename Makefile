@@ -6,10 +6,13 @@ CC		= cc
 CFLAGS	= -Wall -Wextra -Werror -g3
 RM 		= rm -rf
 
-MLX = -lmlx -lXext -lX11 -lm
+MLX =  -lXext -lX11 -lm
 
 LIBFT_DIR	= libraries/libft
 LIBFT	= $(LIBFT_DIR)/libft.a
+
+MLX_LB_DIR	= minilibx-linux
+MLX_LB	= $(MLX_LB_DIR)/libmlx.a
 
 DIR_OBJ = obj
 GETLINE_DIR = libraries/getline
@@ -44,7 +47,7 @@ $(LIBFT):
 	@make --no-print-directory -C $(LIBFT_DIR) bonus
 
 $(NAME): $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) $(MLX) $(LIBFT) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJ) $(MLX) $(LIBFT) $(MLX_LB) -o $(NAME)
 
 	
 $(DIR_OBJ)/%.o: $(SRC_DIR)%.c
