@@ -6,7 +6,7 @@
 /*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 14:57:09 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/23 09:24:08 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/07/31 10:01:22 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <stdio.h>
 # include  <math.h> 
 # include <stdbool.h>
-# include <mlx.h>
+# include "../minilibx-linux/mlx.h"
 # include <X11/X.h>
 
 # include "../libraries/getline/get_next_line.h"
@@ -28,13 +28,14 @@
 # define ALLOC	1
 # define STDERR	2
 
-# define WINDOW_WIDTH 1000
-# define WINDOW_HEIGHT 600
+# define WINDOW_WIDTH 1000 // cols
+# define WINDOW_HEIGHT 600 //rows
 # define TILE_SIZE 32
 # define PI 3.141592653589793
-# define FOV 60 * (PI /180)
+# define FOV 60 * (PI /180) // <- convert in radin (degree * 180/PI)
 # define MOVE_SPEED 2
 # define ROTATION_SPEED 0.2
+# define NUM_RAYS 300
 // color 
 #define WHITE 0xFFFFFF
 #define BLACK 0x000000
@@ -107,6 +108,24 @@ typedef struct	s_imag
 	int			width;
 	int			height;
 }				t_imag;
+
+typedef	struct s_ray
+{
+	double		ray_angle;//
+	double		step_angle;
+	double		distance;//
+	double		first_x;
+	double		first_y;
+	double		step_x;
+	double		step_y;
+	double		h_dist;
+	double		v_dist;
+	t_point		player;
+	t_point		wallHit;
+	t_point		ray_end;
+	t_point		v_intersect;
+	t_point		h_Interseaction; // this forst point this 
+}	t_ray;
 
 typedef struct	s_game
 {
@@ -182,4 +201,7 @@ void validate_colors(t_config *_config);
 void map_is_closed(char **map, short size);
 bool validate_map(char **map, int height);
 
+void		raycasting(t_data_game *_game);
+void		draw_line(t_data_game *_game, t_point start_p, t_point end_p, int color);
+bool		is_wall(t_data_game *_game, double x, double y);
 #endif
