@@ -6,7 +6,7 @@
 /*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 15:45:16 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/23 11:39:07 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/07/31 11:06:14 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ void	_player_move(int key, t_data_game *_game)
 	}
 	else if (key == W_KEY)
 	{
-		_game->player->_x += cos(_game->player->angle + M_PI) * MOVE_SPEED;
-		_game->player->_y += sin(_game->player->angle + M_PI) * MOVE_SPEED;
+		_game->player->_x -= cos(_game->player->angle) * MOVE_SPEED;
+		_game->player->_y -= sin(_game->player->angle) * MOVE_SPEED;
 	}
 	else if (key == D_KEY)
 	{
@@ -79,35 +79,74 @@ void	draw_ray(t_data_game *_game, double angle, int color)
         ry += dy;
     }
 }
-
+/*
 int	render(t_data_game *_game)
 {
 	static short	frame;
 	if (frame == 100){
 		// clear_image(_game->_img, BLACK);
 		draw_map(_game);
-		// 
+		// cast_all_rays(_game);
 		draw_ray(_game, _game->player->angle, BLACK);
+		// raycasting(_game);
         mlx_put_image_to_window(_game->_mlx, _game->_win_mlx, _game->_img->img, 0, 0);
-
 		frame = 0;
 	}
 	frame++;
 	return 0;
+}*/
+
+// #define RAY_STEP (FOV_ANGLE / NUM_RAYS)
+
+void cast_all_rays(t_data_game *_game)
+{
+    double start_angle = _game->player->angle - (FOV / 2);
+    
+    for (int i = 0; i < NUM_RAYS; i++)
+    {
+        double ray_angle = start_angle + i * (FOV / NUM_RAYS);
+
+        // Normalize angle between 0 and 2π
+        if (ray_angle < 0)
+            ray_angle += 2 * PI;
+        if (ray_angle > 2 * PI)
+            ray_angle -= 2 * PI;
+
+        draw_ray(_game, ray_angle, 0x00FF00); // Green color for visibility
+    }
+}
+int render(t_data_game *_game)
+{
+    static short frame;
+
+    if (frame == 100)
+    {
+        draw_map(_game);
+
+        cast_all_rays(_game);  // Draw all rays in a FOV
+
+        mlx_put_image_to_window(_game->_mlx, _game->_win_mlx, _game->_img->img, 0, 0);
+        frame = 0;
+    }
+
+    frame++;
+    return 0;
 }
 
-int is_wall(t_data_game *_game, double x, double y)
+
+
+bool is_wall(t_data_game *_game, double x, double y)
 {
     int grid_x = (int)(x / TILE_SIZE);
     int grid_y = (int)(y / TILE_SIZE);
 
     if (grid_x < 0 || grid_y < 0 || grid_y >= _game->map_height || grid_x >= _game->map_width)
-        return 1;
+        return true;
     char c = _game->map[grid_y][grid_x];
 	// printf("Postion x : %d, y : %d\n", grid_x, grid_y);
     if (c == '1')
-        return 1;
-    return 0;
+        return true;
+    return false;
 }
 
 int	control_key_(int keycode, t_data_game *_game)
@@ -157,8 +196,6 @@ int main(int ac, char **av)
 	if (!parsing(av[1], _game))
 		return (ft_malloc(CLEAR, CLEAR), EXIT_FAILURE);
 	player_init(_game);
-	_game->player->_x = (_game->player->_x * TILE_SIZE) + TILE_SIZE / 2;
-	_game->player->_y = (_game->player->_y * TILE_SIZE) + TILE_SIZE / 2;
 	printf("poist p_x : %f\n", _game->player->_x);
 	printf("poist p_y : %f\n", _game->player->_y);
 
