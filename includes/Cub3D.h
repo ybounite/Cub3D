@@ -6,7 +6,7 @@
 /*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 14:57:09 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/31 10:01:22 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/08/01 09:42:26 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@
 # define PI 3.141592653589793
 # define FOV 60 * (PI /180) // <- convert in radin (degree * 180/PI)
 # define MOVE_SPEED 2
-# define ROTATION_SPEED 0.2
-# define NUM_RAYS 300
+# define ROTATION_SPEED 0.2618
+# define NUM_RAYS 1000
 // color 
 #define WHITE 0xFFFFFF
 #define BLACK 0x000000
@@ -46,6 +46,9 @@
 #define GRAY 0x808080
 #define DARK_GRAY 0x404040
 
+# define NONE 0
+# define HORIZONTAL 1
+# define VERTICAL 2
 typedef enum 
 {
 	NO_TEXTURE,  // North
@@ -114,12 +117,12 @@ typedef	struct s_ray
 	double		ray_angle;//
 	double		step_angle;
 	double		distance;//
-	double		first_x;
-	double		first_y;
-	double		step_x;
+	double		angle_step;
+	double		wall_hit_x;
+	double		wall_hit_y;
 	double		step_y;
 	double		h_dist;
-	double		v_dist;
+	int		wall_type;
 	t_point		player;
 	t_point		wallHit;
 	t_point		ray_end;
@@ -136,13 +139,14 @@ typedef struct	s_game
 	void		*_mlx;
 	void		*_win_mlx;
 	char		spawm_dir;
-	int		 	map_width;
-	int			map_height;
+	int		map_width;
+	int		map_height;
 	t_imag		*_img;
 	t_list		*list;
 	t_list		*map_start;
 	t_config	*config;
 	t_player	*player;
+	t_ray		ray;
 }				t_data_game;
 
 /* -------------------------------------------------------------------------- */
@@ -204,4 +208,6 @@ bool validate_map(char **map, int height);
 void		raycasting(t_data_game *_game);
 void		draw_line(t_data_game *_game, t_point start_p, t_point end_p, int color);
 bool		is_wall(t_data_game *_game, double x, double y);
+
+void	cast_all_rays(t_data_game *_game);
 #endif
