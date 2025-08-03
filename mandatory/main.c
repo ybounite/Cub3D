@@ -258,13 +258,17 @@ int	control_key_(int keycode, t_data_game *_game)
 		{
 			_game->player->angle += 2 * PI;
 			printf("updat angle LEFT : %f\n", _game->player->angle);
+
 		}
 	}
-	else if (keycode == RIGHT_ARROW){
+	else if (keycode == RIGHT_ARROW)
+	{
 		_game->player->angle += ROTATION_SPEED;
 		printf("angle RIGTH : %f\n", _game->player->angle);
-		if (_game->player->angle >= 2)
-			_game->player->angle -= 2 * PI; // keep angle 
+		if (_game->player->angle >= 2){
+			_game->player->angle -= 2 * PI; // keep angle
+			printf("updat angle RIGTH : %f\n", _game->player->angle);
+		}
 	}
 	return (true);
 }
