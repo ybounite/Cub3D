@@ -6,7 +6,7 @@
 /*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 10:21:02 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/21 10:24:00 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/08/01 09:09:29 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,9 @@ void	draw_line(t_data_game *_game, t_point start_p, t_point end_p, int color)
 
 	while (i < steps)
 	{
-		my_mlx_pixel_put(_game->_img, start_p.x, start_p.y, color);
 		start_p.x += dx/steps;
 		start_p.y += dy/steps;
+		my_mlx_pixel_put(_game->_img, start_p.x, start_p.y, color);
 		i++;
 	}
 }
