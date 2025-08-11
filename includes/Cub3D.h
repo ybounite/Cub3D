@@ -117,17 +117,17 @@ typedef	struct s_ray
 	double		ray_angle;//
 	double		step_angle;
 	double		distance;//
-	double		angle_step;
-	double		wall_hit_x;
-	double		wall_hit_y;
-	double		step_y;
-	double		h_dist;
+	double		h_distance;
+	double		v_distance;
 	int		wall_type;
 	t_point		player;
-	t_point		wallHit;
-	t_point		ray_end;
-	t_point		v_intersect;
-	t_point		h_Interseaction; // this forst point this 
+	t_point		first_inters_h;
+	t_point		first_inters_v;
+	t_point		step_h;
+	t_point		step_v;
+	t_point		hit;
+	t_point		v_inters;
+	t_point		h_inters; // this forst point this 
 }	t_ray;
 
 typedef struct	s_game
@@ -170,7 +170,21 @@ t_list	        *listnew(void *content);
 t_list      	*file_reading(short fd);
 void	        Print_list(t_list *_list);
 
+/* -------------------------------------------------------------------------- */
+/*                             angle_direction.c                              */
+/* -------------------------------------------------------------------------- */
+void			normalize_angle(double *angle);
+bool			is_facing_down(double angle);
+bool			is_facing_up(double angle);
+bool			is_facing_right(double angle);
+bool			is_facing_left(double angle);
 
+/* -------------------------------------------------------------------------- */
+/*                            horizontal_intersection.c                       */
+/* -------------------------------------------------------------------------- */
+/* HORIZONTAL INTERSECTION */
+bool			cast_horizontal(t_data_game *g, t_ray *ray,
+			       t_point *hit, double *dist);
 // init player 
 void			player_position(t_data_game *_game);
 void			init_player_direction(t_data_game *_game, char spawn_dir);
