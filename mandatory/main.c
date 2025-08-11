@@ -12,30 +12,6 @@
 
 #include "../includes/Cub3D.h"
 
-void	_player_move(int key, t_data_game *_game)
-{
-	if (key == S_KEY)
-	{
-		_game->player->_x -= cos(_game->player->angle) * MOVE_SPEED;
-		_game->player->_y -= sin(_game->player->angle) * MOVE_SPEED;
-	}
-	else if (key == W_KEY)
-	{
-		_game->player->_x += cos(_game->player->angle) * MOVE_SPEED;
-		_game->player->_y += sin(_game->player->angle) * MOVE_SPEED;
-	}
-	else if (key == D_KEY)
-	{
-		_game->player->_x += cos(_game->player->angle - M_PI_2) * MOVE_SPEED;
-		_game->player->_y += sin(_game->player->angle - M_PI_2) * MOVE_SPEED;
-	}
-	else if (key == A_KEY)
-	{
-		_game->player->_x += cos(_game->player->angle + M_PI_2) * MOVE_SPEED;
-		_game->player->_y += sin(_game->player->angle + M_PI_2) * MOVE_SPEED;
-	}
-}
-
 void	my_mlx_pixel_put(t_imag *_img, int x, int y, int color)
 {
 	char	*dst;
@@ -61,8 +37,6 @@ void	clear_image(t_imag *img, int color)
         y++;
     }
 }
-
-
 
 /* --------------------------------------------------- */
 /* HORIZONTAL INTERSECTION */
@@ -132,10 +106,11 @@ bool cast_vertical(t_data_game *g, t_ray *ray, t_point *hit, double *dist)
            next_x < g->map_width * TILE_SIZE &&
            next_y < g->map_height * TILE_SIZE)
     {
-        int map_x = (int)((next_x + (is_facing_left(ray->ray_angle) ? -1 : 0)) / TILE_SIZE);
-        int map_y = (int)(next_y / TILE_SIZE);
+        int map_x = (int)((next_x + (is_facing_left(ray->ray_angle) ? -1 : 0)));
+        int map_y = (int)(next_y);
 
-        if (g->map[map_y][map_x] == '1') {
+        if (_hase_wall(g, map_x, map_y))
+	{
             *hit = (t_point){next_x, next_y};
             *dist = hypot(next_x - ray->player.x, next_y - ray->player.y);
             return true;
@@ -149,7 +124,7 @@ bool cast_vertical(t_data_game *g, t_ray *ray, t_point *hit, double *dist)
 /* --------------------------------------------------- */
 /* RAY CAST */
 
-void cast_ray(t_data_game *g, t_ray *ray)
+void	cast_ray(t_data_game *g, t_ray *ray)
 {
     t_point h_hit, v_hit;
     double h_dist = 1e30, v_dist = 1e30;
@@ -173,7 +148,7 @@ void cast_ray(t_data_game *g, t_ray *ray)
 /* --------------------------------------------------- */
 /* DRAW LINE */
 
-void _draw_line(t_data_game *g, t_point start, t_point end, int color)
+void	_draw_line(t_data_game *g, t_point start, t_point end, int color)
 {
     double dx = end.x - start.x;
     double dy = end.y - start.y;
@@ -252,57 +227,6 @@ int render(t_data_game *_game)
 	return 0;
 }
 */
-bool	is_wall(t_data_game *_game, double x, double y)
-{
-	int	grid_x;
-	int	grid_y;
-
-	grid_x = (int)(x / TILE_SIZE);
-	grid_y = (int)(y / TILE_SIZE);
-	if (grid_x < 0 || grid_y < 0 || grid_y >= _game->map_height || grid_x >= _game->map_width)
-		return (true);
-	if (_game->map[grid_y][grid_x] == '1')
-		return (true);
-	return (false);
-}
-
-int	control_key_(int keycode, t_data_game *_game)
-{
-	double	(old_player_x), (old_player_y);
-	(1) && (old_player_y = _game->player->_y), (old_player_x = _game->player->_x);
-	if (keycode == ESCAPE)
-	{
-		mlx_destroy_window(_game->_mlx, _game->_win_mlx);
-		ft_malloc(CLEAR, CLEAR);
-		exit(EXIT_SUCCESS);
-	}
-	_player_move(keycode, _game);
-	if (is_wall(_game, _game->player->_x, _game->player->_y))
-	{
-		_game->player->_x = old_player_x;
-	 	_game->player->_y = old_player_y;
-	}
-	if (keycode == LEFT_ARROW){
-		_game->player->angle -= ROTATION_SPEED;
-		printf("angle LEFT : %f\n", _game->player->angle);
-		if (_game->player->angle < 0)
-		{
-			_game->player->angle += 2 * PI;
-			printf("updat angle LEFT : %f\n", _game->player->angle);
-
-		}
-	}
-	else if (keycode == RIGHT_ARROW)
-	{
-		_game->player->angle += ROTATION_SPEED;
-		printf("angle RIGTH : %f\n", _game->player->angle);
-		if (_game->player->angle >= 2){
-			_game->player->angle -= 2 * PI; // keep angle
-			printf("updat angle RIGTH : %f\n", _game->player->angle);
-		}
-	}
-	return (true);
-}
 
 int main(int ac, char **av)
 {
