@@ -16,13 +16,13 @@ void	_player_move(int key, t_data_game *_game)
 {
 	if (key == S_KEY)
 	{
-		_game->player->_x += cos(_game->player->angle) * MOVE_SPEED;
-		_game->player->_y += sin(_game->player->angle) * MOVE_SPEED;
+		_game->player->_x -= cos(_game->player->angle) * MOVE_SPEED;
+		_game->player->_y -= sin(_game->player->angle) * MOVE_SPEED;
 	}
 	else if (key == W_KEY)
 	{
-		_game->player->_x -= cos(_game->player->angle) * MOVE_SPEED;
-		_game->player->_y -= sin(_game->player->angle) * MOVE_SPEED;
+		_game->player->_x += cos(_game->player->angle) * MOVE_SPEED;
+		_game->player->_y += sin(_game->player->angle) * MOVE_SPEED;
 	}
 	else if (key == D_KEY)
 	{
@@ -62,12 +62,166 @@ void	clear_image(t_imag *img, int color)
     }
 }
 
+
+
+/* --------------------------------------------------- */
+/* HORIZONTAL INTERSECTION */
+
+bool cast_horizontal(t_data_game *g, t_ray *ray, t_point *hit, double *dist)
+{
+    t_point step;
+    t_point intercept;
+
+    intercept.y = floor(ray->player.y / TILE_SIZE) * TILE_SIZE;
+    if (is_facing_down(ray->ray_angle))
+        intercept.y += TILE_SIZE;
+
+    intercept.x = ray->player.x + (intercept.y - ray->player.y) / tan(ray->ray_angle);
+
+    step.y = TILE_SIZE * (is_facing_up(ray->ray_angle) ? -1 : 1);
+    step.x = TILE_SIZE / tan(ray->ray_angle);
+    if ((is_facing_left(ray->ray_angle) && step.x > 0) ||
+        (is_facing_right(ray->ray_angle) && step.x < 0))
+        step.x *= -1;
+
+    double next_x = intercept.x;
+    double next_y = intercept.y;
+
+    while (next_x >= 0 && next_y >= 0 &&
+           next_x < g->map_width * TILE_SIZE &&
+           next_y < g->map_height * TILE_SIZE)
+    {
+        int map_x = (int)(next_x / TILE_SIZE);
+        int map_y = (int)((next_y + (is_facing_up(ray->ray_angle) ? -1 : 0)) / TILE_SIZE);
+
+        if (g->map[map_y][map_x] == '1') {
+            *hit = (t_point){next_x, next_y};
+            *dist = hypot(next_x - ray->player.x, next_y - ray->player.y);
+            return true;
+        }
+        next_x += step.x;
+        next_y += step.y;
+    }
+    return false;
+}
+
+/* --------------------------------------------------- */
+/* VERTICAL INTERSECTION */
+
+bool cast_vertical(t_data_game *g, t_ray *ray, t_point *hit, double *dist)
+{
+    t_point step;
+    t_point intercept;
+
+    intercept.x = floor(ray->player.x / TILE_SIZE) * TILE_SIZE;
+    if (is_facing_right(ray->ray_angle))
+        intercept.x += TILE_SIZE;
+
+    intercept.y = ray->player.y + (intercept.x - ray->player.x) * tan(ray->ray_angle);
+
+    step.x = TILE_SIZE * (is_facing_left(ray->ray_angle) ? -1 : 1);
+    step.y = TILE_SIZE * tan(ray->ray_angle);
+    if ((is_facing_up(ray->ray_angle) && step.y > 0) ||
+        (is_facing_down(ray->ray_angle) && step.y < 0))
+        step.y *= -1;
+
+    double next_x = intercept.x;
+    double next_y = intercept.y;
+
+    while (next_x >= 0 && next_y >= 0 &&
+           next_x < g->map_width * TILE_SIZE &&
+           next_y < g->map_height * TILE_SIZE)
+    {
+        int map_x = (int)((next_x + (is_facing_left(ray->ray_angle) ? -1 : 0)) / TILE_SIZE);
+        int map_y = (int)(next_y / TILE_SIZE);
+
+        if (g->map[map_y][map_x] == '1') {
+            *hit = (t_point){next_x, next_y};
+            *dist = hypot(next_x - ray->player.x, next_y - ray->player.y);
+            return true;
+        }
+        next_x += step.x;
+        next_y += step.y;
+    }
+    return false;
+}
+
+/* --------------------------------------------------- */
+/* RAY CAST */
+
+void cast_ray(t_data_game *g, t_ray *ray)
+{
+    t_point h_hit, v_hit;
+    double h_dist = 1e30, v_dist = 1e30;
+    bool h_found = cast_horizontal(g, ray, &h_hit, &h_dist);
+    bool v_found = cast_vertical(g, ray, &v_hit, &v_dist);
+
+    if (h_found && (!v_found || h_dist < v_dist)) {
+        ray->hit = h_hit;
+        ray->distance = h_dist;
+    }
+    else if (v_found) {
+        ray->hit = v_hit;
+        ray->distance = v_dist;
+    }
+    else {
+        ray->hit = ray->player; // no hit
+        ray->distance = 0;
+    }
+}
+
+/* --------------------------------------------------- */
+/* DRAW LINE */
+
+void _draw_line(t_data_game *g, t_point start, t_point end, int color)
+{
+    double dx = end.x - start.x;
+    double dy = end.y - start.y;
+    double steps = fabs(dx) > fabs(dy) ? fabs(dx) : fabs(dy);
+    if (steps < 1) return;
+    double x_inc = dx / steps;
+    double y_inc = dy / steps;
+    double x = start.x;
+    double y = start.y;
+    for (int i = 0; i <= (int)steps; i++) {
+        my_mlx_pixel_put(g->_img, (int)round(x), (int)round(y), color);
+        x += x_inc;
+        y += y_inc;
+    }
+}
+
+/* --------------------------------------------------- */
+/* RENDER (Single Ray Example) */
+
+int render(t_data_game *g)
+{
+    static short frame;
+    if (frame == 100) {
+        clear_image(g->_img, 0x000000);
+	
+	draw_map(g);
+        t_ray ray;
+        ray.player.x = g->player->_x;
+        ray.player.y = g->player->_y;
+        ray.ray_angle = g->player->angle; // single ray straight ahead
+        normalize_angle(&ray.ray_angle);
+
+        cast_ray(g, &ray);
+        _draw_line(g, ray.player, ray.hit, 0xFFFFFF);
+
+        mlx_put_image_to_window(g->_mlx, g->_win_mlx, g->_img->img, 0, 0);
+        frame = 0;
+    }
+    frame++;
+    return 0;
+}
+/*
 void	sdraw_line(t_data_game *_game)
 {
 	double	x = _game->player->_x;
 	double	y = _game->player->_y;
-	double	dx = cos(_game->player->angle) * -1;
-	double	dy = sin(_game->player->angle) * -1;
+	double	dx = cos(_game->player->angle);
+	double	dy = sin(_game->player->angle);
 	int		i;
 	i = 0;
 	while (i < 15) // length of line
@@ -80,129 +234,6 @@ void	sdraw_line(t_data_game *_game)
 		i++;
 	}
 }
-/*
-void	draw_ray(t_data_game *_game, double angle, int color)
-{
-	double rx = _game->player->_x;
-	double ry = _game->player->_y;
-
-	double dx = cos(angle) * -1;
-	double dy = sin(angle) * -1;
-	while (true)
-	{
-        	int map_x = (int)(rx / TILE_SIZE);
-	        int map_y = (int)(ry / TILE_SIZE);
-        	if (_game->map[map_y][map_x] == '1')
-	            break;
-	        if (rx < 0 || ry < 0 || map_x >= _game->map_width || map_y >= _game->map_height)
-        	    break;
-	        my_mlx_pixel_put(_game->_img, (int)rx, (int)ry, color);
-	        rx += dx;
-        	ry += dy;
-	}
-}
-
-int	render(t_data_game *_game)
-{
-	static short	frame;
-	if (frame == 100){
-		// clear_image(_game->_img, BLACK);
-		draw_map(_game);
-		// cast_all_rays(_game);
-		draw_ray(_game, _game->player->angle, BLACK);
-		// raycasting(_game);
-        mlx_put_image_to_window(_game->_mlx, _game->_win_mlx, _game->_img->img, 0, 0);
-		frame = 0;
-	}
-	frame++;
-	return 0;
-}*/
-
-// bool	is_perpendicular_to_Yaxis(double ray_angle)
-
-// #define RAY_STEP (FOV_ANGLE / NUM_RAYS)
-/*
-double	cast_single_ray(t_data_game *_game, int *hit_vertical)
-{
-	double (x), (y), (dx), (dy);
-
-	x = _game->player->_x;
-	y = _game->player->_y;
-	dx = cos(_game->player->angle) * -1;
-	dy = sin(_game->player->angle) * -1;
-	while (true)
-	{
-		if (_game->map[(int)(y / TILE_SIZE)][(int)(x / TILE_SIZE)] == '1')
-		{
-			*hit_vertical = 0;
-			break ;
-		}
-		x += dx;
-		y += dy;
-	}
-	return (sqrt(pow((x - _game->player->_x), 2)) + pow((y - _game->player->_y), 2));
-}
-
-void	draw_3d_projection(t_data_game *_game, int column, double ray_angle, int hit_vertical)
-{
-    // Fisheye correction
-    double corrected = _game->ray.distance * cos(ray_angle - _game->player->angle);
-
-    // Projected wall height
-    double proj_plane = (WINDOW_WIDTH / 2) / tan(FOV / 2);
-    double wall_height = (TILE_SIZE / corrected) * proj_plane;
-
-    int wall_top = (WINDOW_HEIGHT / 2) - (wall_height / 2);
-    int wall_bottom = (WINDOW_HEIGHT / 2) + (wall_height / 2);
-
-    int wall_color = hit_vertical ? 0xAAAAAA : 0xFFFFFF;
-
-    // Draw column (vertical line)
-    for (int y = 0; y < WINDOW_HEIGHT; y++)
-    {
-        if (y < wall_top)
-            my_mlx_pixel_put(_game->_img, column, y, 0x87CEEB); // Sky
-        else if (y >= wall_top && y <= wall_bottom)
-            my_mlx_pixel_put(_game->_img, column, y, wall_color); // Wall
-        else
-            my_mlx_pixel_put(_game->_img, column, y, 0x333333); // Floor
-    }
-}
-
-void	cast_all_rays(t_data_game *_game)
-{
-	double	start_angle;
-	double	ray_angle;
-	short	i;
-	int hit_vertical;
-
-	i = 0;
-	start_angle = _game->player->angle - (FOV / 2);
-	while (i < NUM_RAYS)
-	{
-		ray_angle = start_angle + i * (FOV / NUM_RAYS);
-		ray_angle = config_normaliz_angle(ray_angle);
-		_game->ray.distance = cast_single_ray(_game, &hit_vertical);
-		//draw_3d_projection(_game, i, ray_angle, hit_vertical);
-		draw_ray(_game, ray_angle, 0x00FF00); // Green color for visibility
-		i++;
-	}
-}*/
-/*
-void cast_all_rays(t_data_game *_game)
-{
-	double start_angle = _game->player->angle - (FOV / 2);
-	for (int i = 0; i < NUM_RAYS; i++)
-	{
-		double ray_angle = start_angle + i * (FOV / NUM_RAYS);
-        	// Normalize angle between 0 and 2π
-		if (ray_angle < 0)
-		ray_angle += 2 * PI;
-		if (ray_angle > 2 * PI)
-		ray_angle -= 2 * PI;
-		draw_ray(_game, ray_angle, 0x00FF00); // Green color for visibility
-	}
-}*/
 
 int render(t_data_game *_game)
 {
@@ -211,7 +242,7 @@ int render(t_data_game *_game)
 	if (frame == 100)
 	{
 		draw_map(_game);
-		cast_all_rays(_game);  // Draw all rays in a FOV
+		//cast_all_rays(_game);  // Draw all rays in a FOV
 		sdraw_line(_game);
 		//draw_ray(_game, _game->player->angle, 0x00FF00);
 		mlx_put_image_to_window(_game->_mlx, _game->_win_mlx, _game->_img->img, 0, 0);
@@ -220,7 +251,7 @@ int render(t_data_game *_game)
 	frame++;
 	return 0;
 }
-
+*/
 bool	is_wall(t_data_game *_game, double x, double y)
 {
 	int	grid_x;
