@@ -33,7 +33,7 @@ SRC	= $(SRC_DIR)/main.c \
 	  $(RAYCASTING_DIR)/mlx_init_data.c \
 	  $(PARSING_DIR)/validate_map.c \
 	  $(RAYCASTING_DIR)/map_renderer.c \
-	  $(RAYCASTING_DIR)/ray_casting.c 
+	  $(RAYCASTING_DIR)/angle_direction.c 
 
 SRC += $(SRC_GETLINE)
 
