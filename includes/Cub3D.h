@@ -182,10 +182,23 @@ bool			is_facing_left(double angle);
 /* -------------------------------------------------------------------------- */
 /*                            horizontal_intersection.c                       */
 /* -------------------------------------------------------------------------- */
-/* HORIZONTAL INTERSECTION */
+/* 			HORIZONTAL INTERSECTION */
 bool			cast_horizontal(t_data_game *g, t_ray *ray,
 			       t_point *hit, double *dist);
-// init player 
+
+/* -------------------------------------------------------------------------- */
+/*                          collision_check.c 		                      */
+/* -------------------------------------------------------------------------- */
+bool			_hase_wall(t_data_game *_game, double dx, double dy);
+bool			is_wall(t_data_game *_game, double x, double y);
+
+/* -------------------------------------------------------------------------- */
+/*                          player_control.c 		                      */
+/* -------------------------------------------------------------------------- */
+int			control_key_(int keycode, t_data_game *_game);
+void			_player_move(int key, t_data_game *_game);
+
+// init player
 void			player_position(t_data_game *_game);
 void			init_player_direction(t_data_game *_game, char spawn_dir);
 void			player_init(t_data_game *_game);
