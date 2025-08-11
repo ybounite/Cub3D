@@ -17,6 +17,8 @@ MLX_LB	= $(MLX_LB_DIR)/libmlx.a
 DIR_OBJ = obj
 GETLINE_DIR = libraries/getline
 SRC_DIR	= mandatory
+DRAW_MAPS_DIR = $(SRC_DIR)/draw_map
+MANAGE_PLAYER_DIR = $(SRC_DIR)/manage_player
 PARSING_DIR = $(SRC_DIR)/parsing
 RAYCASTING_DIR = $(SRC_DIR)/raycasting
 SRC_GETLINE = $(GETLINE_DIR)/get_next_line.c 
@@ -29,11 +31,13 @@ SRC	= $(SRC_DIR)/main.c \
 	  $(PARSING_DIR)/config_parser.c \
 	  $(PARSING_DIR)/validate_textures.c \
 	  $(PARSING_DIR)/check_allowed_characters.c\
-	  $(RAYCASTING_DIR)/player_init.c \
-	  $(RAYCASTING_DIR)/mlx_init_data.c \
 	  $(PARSING_DIR)/validate_map.c \
-	  $(RAYCASTING_DIR)/map_renderer.c \
-	  $(RAYCASTING_DIR)/angle_direction.c 
+	  $(MANAGE_PLAYER_DIR)/player_init.c \
+	  $(MANAGE_PLAYER_DIR)/player_control.c \
+	  $(DRAW_MAPS_DIR)/map_renderer.c \
+	  $(RAYCASTING_DIR)/mlx_init_data.c \
+	  $(RAYCASTING_DIR)/angle_direction.c \
+	  $(RAYCASTING_DIR)/collision_check.c
 
 SRC += $(SRC_GETLINE)
 
