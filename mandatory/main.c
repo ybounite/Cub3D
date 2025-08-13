@@ -41,48 +41,47 @@ void	clear_image(t_imag *img, int color)
 /* --------------------------------------------------- */
 /* HORIZONTAL INTERSECTION */
 
-bool cast_horizontal(t_data_game *g, t_ray *ray, t_point *hit, double *dist)
+bool	cast_horizontal(t_data_game *g, t_ray *ray, t_point *hit, double *dist)
 {
-    t_point step;
-    t_point intercept;
+	t_point step;
+	t_point intercept;
 
-    intercept.y = floor(ray->player.y / TILE_SIZE) * TILE_SIZE;
-    if (is_facing_down(ray->ray_angle))
-        intercept.y += TILE_SIZE;
+	intercept.y = floor(ray->player.y / TILE_SIZE) * TILE_SIZE;
+	if (is_facing_down(ray->ray_angle))
+		intercept.y += TILE_SIZE;
 
-    intercept.x = ray->player.x + (intercept.y - ray->player.y) / tan(ray->ray_angle);
+	intercept.x = ray->player.x + (intercept.y - ray->player.y) / tan(ray->ray_angle);
 
-    step.y = TILE_SIZE * (is_facing_up(ray->ray_angle) ? -1 : 1);
-    step.x = TILE_SIZE / tan(ray->ray_angle);
-    if ((is_facing_left(ray->ray_angle) && step.x > 0) ||
-        (is_facing_right(ray->ray_angle) && step.x < 0))
-        step.x *= -1;
+	step.y = TILE_SIZE * (is_facing_up(ray->ray_angle) ? -1 : 1);
+	step.x = TILE_SIZE / tan(ray->ray_angle);
+	if ((is_facing_left(ray->ray_angle) && step.x > 0) ||
+		(is_facing_right(ray->ray_angle) && step.x < 0))
+		step.x *= -1;
 
-    double next_x = intercept.x;
-    double next_y = intercept.y;
+	double next_x = intercept.x;
+	double next_y = intercept.y;
 
-    while (next_x >= 0 && next_y >= 0 &&
-           next_x < g->map_width * TILE_SIZE &&
-           next_y < g->map_height * TILE_SIZE)
-    {
-        int map_x = (int)(next_x / TILE_SIZE);
-        int map_y = (int)((next_y + (is_facing_up(ray->ray_angle) ? -1 : 0)) / TILE_SIZE);
-
-        if (g->map[map_y][map_x] == '1') {
-            *hit = (t_point){next_x, next_y};
-            *dist = hypot(next_x - ray->player.x, next_y - ray->player.y);
-            return true;
-        }
-        next_x += step.x;
-        next_y += step.y;
-    }
-    return false;
+	while (next_x >= 0 && next_y >= 0 &&
+		next_x < g->map_width * TILE_SIZE &&
+		next_y < g->map_height * TILE_SIZE)
+	{
+		int map_x = (int)(next_x / TILE_SIZE);
+		int map_y = (int)((next_y + (is_facing_up(ray->ray_angle) ? -1 : 0)) / TILE_SIZE);
+		if (g->map[map_y][map_x] == '1') {
+			*hit = (t_point){next_x, next_y};
+			*dist = hypot(next_x - ray->player.x, next_y - ray->player.y);
+			return true;
+		}
+		next_x += step.x;
+		next_y += step.y;
+	}
+	return false;
 }
 
 /* --------------------------------------------------- */
 /* VERTICAL INTERSECTION */
 
-bool cast_vertical(t_data_game *g, t_ray *ray, t_point *hit, double *dist)
+bool	cast_vertical(t_data_game *g, t_ray *ray, t_point *hit, double *dist)
 {
     t_point step;
     t_point intercept;
@@ -167,29 +166,67 @@ void	_draw_line(t_data_game *g, t_point start, t_point end, int color)
 
 /* --------------------------------------------------- */
 /* RENDER (Single Ray Example) */
-
-int render(t_data_game *g)
+void	_cast_all_rays(t_data_game *_game)
 {
-    static short frame;
-    if (frame == 100) {
-        clear_image(g->_img, 0x000000);
-	
-	draw_map(g);
-        t_ray ray;
-        ray.player.x = g->player->_x;
-        ray.player.y = g->player->_y;
-        ray.ray_angle = g->player->angle; // single ray straight ahead
-        normalize_angle(&ray.ray_angle);
+        t_ray		ray;
+	short	i;
 
-        cast_ray(g, &ray);
-        _draw_line(g, ray.player, ray.hit, 0xFFFFFF);
-
-        mlx_put_image_to_window(g->_mlx, g->_win_mlx, g->_img->img, 0, 0);
-        frame = 0;
-    }
-    frame++;
-    return 0;
+	ray.ray_angle = _game->player->angle - FOV/2;
+	ray.step_angle = FOV / NUM_RAYS;
+	ray.player.x = _game->player->_x;
+	ray.player.y = _game->player->_y;
+	i = 0;
+	while (i < NUM_RAYS)
+	{
+		normalize_angle(&ray.ray_angle);
+		cast_ray(_game, &ray);
+		_draw_line(_game, ray.player, ray.hit,  0x00FF00);
+		ray.ray_angle += ray.step_angle;
+		i++;
+	}
 }
+
+void	sdraw_line(t_data_game *_game)
+{
+	t_point	inters;
+	t_point	step;
+	short	i;
+
+	inters.x = _game->player->_x;
+	inters.y = _game->player->_y;
+	step.x = cos(_game->player->angle);
+	step.y = sin(_game->player->angle);
+	i = 0;
+	while (i < 15) // length of line
+	{
+		if (is_wall(_game, inters.x, inters.y))
+			break ;
+		my_mlx_pixel_put(_game->_img, (int)inters.x, (int)inters.y, 0x000000);
+		inters.x += step.x;
+		inters.y += step.y;
+		i++;
+	}
+}
+
+int	render(t_data_game *g)
+{
+	static short	frame;
+
+	if (frame == 100)
+	{
+		clear_image(g->_img, 0x000000);
+		draw_map(g);
+		_cast_all_rays(g);
+		sdraw_line(g);
+	        //cast_ray(g, &ray);
+		//_draw_line(g, ray.player, ray.hit, 0xFFFFFF);
+		mlx_put_image_to_window(g->_mlx, g->_win_mlx, g->_img->img, 0, 0);
+		frame = 0;
+	}
+	frame++;
+	return (0);
+}
+
 /*
 void	sdraw_line(t_data_game *_game)
 {
