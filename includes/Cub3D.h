@@ -187,6 +187,13 @@ bool			cast_horizontal(t_data_game *g, t_ray *ray,
 			       t_point *hit, double *dist);
 
 /* -------------------------------------------------------------------------- */
+/*                            vertical_intersection.c                         */
+/* -------------------------------------------------------------------------- */
+/* VERTICAL INTERSECTION */
+bool			cast_vertical(t_data_game *g, t_ray *ray,
+				t_point *hit, double *dist);
+
+/* -------------------------------------------------------------------------- */
 /*                          collision_check.c 		                      */
 /* -------------------------------------------------------------------------- */
 bool			_hase_wall(t_data_game *_game, double dx, double dy);
