@@ -35,7 +35,7 @@
 # define FOV 60 * (PI /180) // <- convert in radin (degree * 180/PI)
 # define MOVE_SPEED 2
 # define ROTATION_SPEED 0.2618
-# define NUM_RAYS 1000
+# define NUM_RAYS 200
 // color 
 #define WHITE 0xFFFFFF
 #define BLACK 0x000000
