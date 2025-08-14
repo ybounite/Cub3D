@@ -15,12 +15,12 @@ void	_player_move(int key, t_data_game *_game)
 		_game->player->_x += cos(_game->player->angle) * MOVE_SPEED;
 		_game->player->_y += sin(_game->player->angle) * MOVE_SPEED;
 	}
-	else if (key == D_KEY)
+	else if (key == A_KEY)
 	{
 		_game->player->_x += cos(_game->player->angle - M_PI_2) * MOVE_SPEED;
 		_game->player->_y += sin(_game->player->angle - M_PI_2) * MOVE_SPEED;
 	}
-	else if (key == A_KEY)
+	else if (key == D_KEY)
 	{
 		_game->player->_x += cos(_game->player->angle + M_PI_2) * MOVE_SPEED;
 		_game->player->_y += sin(_game->player->angle + M_PI_2) * MOVE_SPEED;

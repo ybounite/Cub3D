@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 14:57:09 by ybounite          #+#    #+#             */
-/*   Updated: 2025/08/01 09:42:26 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/08/14 09:54:28 by bamezoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -237,7 +237,7 @@ void					my_mlx_pixel_put(t_imag *_img, int x, int y, int color);
 
 void validate_colors(t_config *_config);
 void map_is_closed(char **map, short size);
-bool validate_map(char **map, int height);
+bool is_valid_map(t_data_game *_game);
 
 void		raycasting(t_data_game *_game);
 void		draw_line(t_data_game *_game, t_point start_p, t_point end_p, int color);

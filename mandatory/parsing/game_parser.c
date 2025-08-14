@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   game_parser.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 12:45:53 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/20 18:46:33 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/08/14 10:07:47 by bamezoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ bool	parsing(char *filename, t_data_game *_game)
 	if (!check_allowed_characters(_game))
 		return false;
 	// flood fill check
-	if (!validate_map(_game->map, _game->size))
+	if (!is_valid_map(_game))
 		return false;
 	return (true);
 }
