@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 15:45:16 by ybounite          #+#    #+#             */
-/*   Updated: 2025/08/14 18:54:45 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/08/15 11:06:55 by bamezoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,29 @@
 
 void	_draw_line(t_data_game *g, t_point start, t_point end, int color)
 {
-    double dx = end.x - start.x;
-    double dy = end.y - start.y;
-    double steps = fabs(dx) > fabs(dy) ? fabs(dx) : fabs(dy);
-    if (steps < 1) return;
-    double x_inc = dx / steps;
-    double y_inc = dy / steps;
-    double x = start.x;
-    double y = start.y;
-    for (int i = 0; i <= (int)steps; i++) {
-        my_mlx_pixel_put(g->_img, (int)round(x), (int)round(y), color);
-        x += x_inc;
-        y += y_inc;
-    }
+	double	dx;
+	double	dy;
+	double	steps;
+	double	x_inc;
+	double	y_inc;
+	double	x;
+	double	y;
+
+	dx = end.x - start.x;
+	dy = end.y - start.y;
+	steps = fabs(dx) > fabs(dy) ? fabs(dx) : fabs(dy);
+	if (steps < 1)
+		return ;
+	x_inc = dx / steps;
+	y_inc = dy / steps;
+	x = start.x;
+	y = start.y;
+	for (int i = 0; i <= (int)steps; i++)
+	{
+		my_mlx_pixel_put(g->_img, (int)round(x), (int)round(y), color);
+		x += x_inc;
+		y += y_inc;
+	}
 }
 
 void	sdraw_line(t_data_game *_game)
@@ -83,12 +93,15 @@ int main(int ac, char **av)
 	_game->player = ft_malloc(sizeof(t_player), ALLOC);
 	ft_bzero(_game->config->textures, sizeof(char *) * TEXTURE_COUNT);
 	_game->_img = ft_malloc(sizeof(t_imag), ALLOC);
+	_game->_mlx = mlx_init();
+	if (!_game->_mlx)
+		return (ft_putendl_fd("Error:\nmlx_init failed.", STDERR), false);
 	if (!parsing(av[1], _game))
 		return (ft_malloc(CLEAR, CLEAR), EXIT_FAILURE);
 	player_init(_game);
 	printf("poist p_x : %f\n", _game->player->_x);
 	printf("poist p_y : %f\n", _game->player->_y);
-
+	
 	_mlx_init_data(_game);
 	mlx_hook(_game->_win_mlx, KeyPress, KeyPressMask, control_key_, _game);
 	mlx_loop_hook(_game->_mlx, render, _game);

@@ -6,7 +6,7 @@
 /*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 12:39:41 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/20 10:32:05 by bamezoua         ###   ########.fr       */
+/*   Updated: 2025/08/15 11:13:46 by bamezoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,111 +74,55 @@ void	validate_textures(t_config *_config)
 	}
 }
 
-void	validate_colors(t_config *_config)
+int	shift_color(int r, int g, int b)
+{
+	if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255)
+	{
+		printf("Error : Invalid color range [0, 255] in texture\n");
+		syntax_error(6);
+		ft_malloc(CLEAR, CLEAR);
+		exit(1);
+	}
+	return (r << 16 | g << 8 | b);
+}
+
+void	validate_colors(t_config *_config, t_data_game *_game)
 {
 	short	i;
 	char	**split;
 
+	int r, g, b;
 	i = 4;
 	while (i < 6)
 	{
-		// printf("texture %d: %s\n", i, _config->textures[i]);
 		split = ft_split(_config->textures[i], ',');
 		if (!split || ft_strlen(_config->textures[i]) == 0)
 		{
 			printf("Error : Invalid color format in texture\n");
 			ft_malloc(CLEAR, CLEAR);
-			exit(EXIT_FAILURE);
+			exit(1);
 		}
-		while (*split)
+		if (!split[0] || !split[1] || !split[2] || split[3])
 		{
-			if (ft_strlen(*split) == 0 || ft_atoi(*split) < 0
-				|| ft_atoi(*split) > 255)
-			{
-				printf("Error : Invalid color range [0, 255] in texture\n");
-				syntax_error(6);
-				ft_malloc(CLEAR, CLEAR);
-				exit(EXIT_FAILURE);
-			}
-			split++;
+			printf("Error : Color must be R,G,B format\n");
+			ft_malloc(CLEAR, CLEAR);
+			exit(1);
 		}
-		// if(i == 4)
-		// {
-		// 	_config->floor_color = ft_atoi(_config->textures[i]);
-		// 	printf("Floor color: %d\n", _config->floor_color);
-		// }
-		// else if (i == 5)
-		// {
-		// 	_config->ceiling_color = ft_atoi(_config->textures[i]);
-		// 	printf("Ceiling color: %d\n", _config->ceiling_color);
-		// }
+		r = ft_atoi(split[0]);
+		g = ft_atoi(split[1]);
+		b = ft_atoi(split[2]);
+		if (i == 4)
+		{
+			_config->floor_color = mlx_get_color_value(_game->_mlx,
+					shift_color(r, g, b));
+			printf("floor color: %d\n", _config->floor_color);
+		}
+		else if (i == 5)
+		{
+			_config->ceiling_color = mlx_get_color_value(_game->_mlx,
+					shift_color(r, g, b));
+			printf("ceiling color: %d\n", _config->ceiling_color);
+		}
 		i++;
 	}
 }
-
-// void	check_left_and_right_columns(char **map, short size)
-// {
-// 	short	i;
-
-// 	i = 0;
-// 	while (i < size)
-// 	{
-// 		if (map[i][0] != '1')
-// 		{
-// 			ft_putendl_fd("Error\nMap is not closed on the left side ", STDERR);
-// 			exit(EXIT_FAILURE);
-// 		}
-// 		if (map[i][ft_strlen(map[i]) - 1] != '1')
-// 		{
-// 			ft_putendl_fd("Error\n Map is not closed on the right side ",
-// 				STDERR);
-// 			exit(EXIT_FAILURE);
-// 		}
-// 		i++;
-// 	}
-// }
-
-// void check_top_row(char **map, short size)
-// {
-// 	size_t	i;
-// 	(void)size;
-
-// 	i = 0;
-// 	while (i < ft_strlen(map[0]))
-// 	{
-// 		if (map[0][i] != '1')
-// 		{
-// 			ft_putendl_fd("Error\nMap is not closed on the top row", STDERR);
-// 			exit(EXIT_FAILURE);
-// 		}
-// 		i++;
-// 	}
-// }
-
-// void check_bottom_row(char **map, short size)
-// {
-// 	size_t	i;
-
-// 	i = 0;
-// 	while (i < ft_strlen(map[size - 1]))
-// 	{
-// 		if (map[size - 1][i] != '1')
-// 		{
-// 			ft_putendl_fd("Error\nMap is not closed on the bottom row", STDERR);
-// 			exit(EXIT_FAILURE);
-// 		}
-// 		i++;
-// 	}
-// }
-
-// void	map_is_closed(char **map, short size)
-// {
-// 	short	i;
-// 	short	j;
-
-// 	i = 0;
-// 	j = 0;
-// 	check_left_and_right_columns(map, size);
-// 	check_top_row(map, size);
-// 	check_bottom_row(map, size);
-// }

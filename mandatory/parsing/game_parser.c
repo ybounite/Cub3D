@@ -6,7 +6,7 @@
 /*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 12:45:53 by ybounite          #+#    #+#             */
-/*   Updated: 2025/08/14 10:07:47 by bamezoua         ###   ########.fr       */
+/*   Updated: 2025/08/15 10:42:31 by bamezoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ bool	parsing(char *filename, t_data_game *_game)
 
 	//---------------------------------------------------------------------------
 	// check color is valide range {0, 255}
-	validate_colors(_game->config);
+	validate_colors(_game->config, _game);
 	_game->map = parse_map(_game);
 	_game->map_height = _game->size;
 	_game->map_width = (int)ft_strlen(_game->map[1]);

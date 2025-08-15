@@ -6,7 +6,7 @@
 /*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 14:57:09 by ybounite          #+#    #+#             */
-/*   Updated: 2025/08/14 16:09:34 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/08/15 11:05:47 by bamezoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -251,7 +251,7 @@ void			 start_simulation(t_data_game *_game);
 void					draw_map(t_data_game *_game);
 void					my_mlx_pixel_put(t_imag *_img, int x, int y, int color);
 
-void validate_colors(t_config *_config);
+void	validate_colors(t_config *_config, t_data_game *_game);
 void map_is_closed(char **map, short size);
 bool is_valid_map(t_data_game *_game);
 

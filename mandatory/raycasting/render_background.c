@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render_background.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybounite <ybounite@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 16:03:03 by ybounite          #+#    #+#             */
-/*   Updated: 2025/08/14 18:52:26 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/08/15 11:08:50 by bamezoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void draw_sky_and_floor(t_data_game *_game)
 		x = 0;
 		while (x < WINDOW_WIDTH)
 		{
-			my_mlx_pixel_put(_game->_img, x, y, 0x87CEEB);
+			my_mlx_pixel_put(_game->_img, x, y, _game->config->ceiling_color);
 			x++;
 		}
 		y++;
@@ -32,7 +32,7 @@ void draw_sky_and_floor(t_data_game *_game)
 		x = 0;
 		while (x < WINDOW_WIDTH)
 		{
-			my_mlx_pixel_put(_game->_img, x, y, 0x444444);
+			my_mlx_pixel_put(_game->_img, x, y, _game->config->floor_color);
 			x++;
 		}
 		y++;
