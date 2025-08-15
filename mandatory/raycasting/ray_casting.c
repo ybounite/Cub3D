@@ -12,8 +12,64 @@
 
 #include "../../includes/Cub3D.h"
 
-/// #define RAY_STEP (FOV_ANGLE / NUM_RAYS)
+void	cast_ray(t_data_game *g, t_ray *ray)
+{
+	t_point h_hit, v_hit;
+	double h_dist = 1e30, v_dist = 1e30;
+	bool h_found = cast_horizontal(g, ray, &h_hit, &h_dist);
+	bool v_found = cast_vertical(g, ray, &v_hit, &v_dist);
 
+	if (h_found && (!v_found || h_dist < v_dist))
+	{
+		ray->hit = h_hit;
+		ray->distance = h_dist;
+	}
+	else if (v_found)
+	{
+		ray->hit = v_hit;
+		ray->distance = v_dist;
+	}
+	else{
+		ray->hit = ray->player; // no hit
+		ray->distance = 0;
+	}
+}
+
+void _cast_all_rays(t_data_game *g)
+{
+	t_ray ray;
+	short i;
+
+	ray.ray_angle = g->player->angle - FOV / 2;
+	ray.step_angle = FOV / WINDOW_WIDTH;
+	ray.player.x = g->player->_x;
+	ray.player.y = g->player->_y;
+
+    // Distance from player to projection plane (in pixels)
+	double dist_proj_plane = (WINDOW_HEIGHT / 2) / tan(FOV / 2);
+	for (i = 0; i < WINDOW_WIDTH; i++)
+	{
+		normalize_angle(&ray.ray_angle);
+		cast_ray(g, &ray);
+        // Correct fish-eye
+		double perp_dist = ray.distance * cos(ray.ray_angle - g->player->angle);
+        // Wall height based on projection
+		double wall_height = (TILE_SIZE / perp_dist) * dist_proj_plane;
+        // Top & bottom Y positions
+		int wall_top = (WINDOW_HEIGHT / 2) - wall_height / 2;
+		if (wall_top < 0)
+			wall_top = 0;
+		int wall_bottom = (WINDOW_HEIGHT / 2) + wall_height / 2;
+		if (wall_bottom > WINDOW_HEIGHT)
+			wall_bottom = WINDOW_HEIGHT;
+        // Draw wall stripe (centered vertically)
+		for (int y = wall_top; y < wall_bottom; y++)
+			my_mlx_pixel_put(g->_img, i, y, 0xBBBBBB);
+		ray.ray_angle += ray.step_angle;
+	}
+}
+
+/*
 double	normaliz_angle(double ray_angle)
 {
 	if (ray_angle < 0) // Normalize angle between 0 and 2π
@@ -28,7 +84,7 @@ void init_ray(t_ray *ray, t_data_game *data)
 	ray->ray_angle = data->player->angle - (FOV / 2);
 	ray->angle_step = FOV / NUM_RAYS;
 }
-/*
+/ hhhhh
 double	cast_single_ray(t_data_game *_game, int *hit_vertical)
 {
 	double (x), (y), (dx), (dy);
@@ -116,7 +172,7 @@ void	cast_all_rays(t_data_game *_game)
 		i++;
 	}
 }
-*/
+
 // Horizontal intersection (DDA simplification)
 void check_horizontal_intersect(t_data_game *data, t_ray *ray)
 {
@@ -230,3 +286,4 @@ void cast_all_rays(t_data_game *data)
 		i++;
 	}
 }
+*/
