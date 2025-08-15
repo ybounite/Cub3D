@@ -35,11 +35,14 @@ SRC	= $(SRC_DIR)/main.c \
 	  $(MANAGE_PLAYER_DIR)/player_init.c \
 	  $(MANAGE_PLAYER_DIR)/player_control.c \
 	  $(DRAW_MAPS_DIR)/map_renderer.c \
+	  $(DRAW_MAPS_DIR)/mlx_utils.c \
 	  $(RAYCASTING_DIR)/mlx_init_data.c \
 	  $(RAYCASTING_DIR)/angle_direction.c \
 	  $(RAYCASTING_DIR)/collision_check.c \
 	  $(RAYCASTING_DIR)/vertical_intersection.c \
-	  $(RAYCASTING_DIR)/horizontal_intersection.c
+	  $(RAYCASTING_DIR)/horizontal_intersection.c \
+	  $(RAYCASTING_DIR)/render_background.c \
+	  $(RAYCASTING_DIR)/ray_casting.c
 
 SRC += $(SRC_GETLINE)
 
