@@ -6,7 +6,7 @@
 /*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 14:57:09 by ybounite          #+#    #+#             */
-/*   Updated: 2025/08/14 09:54:28 by bamezoua         ###   ########.fr       */
+/*   Updated: 2025/08/14 16:09:34 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@
 # define ALLOC	1
 # define STDERR	2
 
-# define WINDOW_WIDTH 1000 // cols
-# define WINDOW_HEIGHT 600 //rows
+# define WINDOW_WIDTH 1280 // cols
+# define WINDOW_HEIGHT 736 //rows
 # define TILE_SIZE 32
 # define PI 3.141592653589793
 # define FOV 60 * (PI /180) // <- convert in radin (degree * 180/PI)
@@ -105,8 +105,8 @@ typedef struct	s_imag
 {
 	void		*img;
 	char		*addr;
-	int			bits_per_pixel;
-	int			line_length;
+	int			bit_per_pixel;
+	int			line_len;
 	int			endian;
 	int			width;
 	int			height;
@@ -173,6 +173,16 @@ void	        Print_list(t_list *_list);
 /* -------------------------------------------------------------------------- */
 /*                             angle_direction.c                              */
 /* -------------------------------------------------------------------------- */
+void	my_mlx_pixel_put(t_imag *_img, int x, int y, int color);
+void	clear_image(t_imag *img, int color);
+/* -------------------------------------------------------------------------- */
+/*                             render_background.c                            */
+/* -------------------------------------------------------------------------- */
+void draw_sky_and_floor(t_data_game *_game);
+
+/* -------------------------------------------------------------------------- */
+/*                             angle_direction.c                              */
+/* -------------------------------------------------------------------------- */
 void			normalize_angle(double *angle);
 bool			is_facing_down(double angle);
 bool			is_facing_up(double angle);
@@ -204,6 +214,12 @@ bool			is_wall(t_data_game *_game, double x, double y);
 /* -------------------------------------------------------------------------- */
 int			control_key_(int keycode, t_data_game *_game);
 void			_player_move(int key, t_data_game *_game);
+
+/* -------------------------------------------------------------------------- */
+/*                          ray_casting.c 		                      */
+/* -------------------------------------------------------------------------- */
+void _cast_all_rays(t_data_game *g);
+void	cast_ray(t_data_game *g, t_ray *ray);
 
 // init player
 void			player_position(t_data_game *_game);
