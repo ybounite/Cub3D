@@ -23,15 +23,18 @@ void	cast_ray(t_data_game *g, t_ray *ray)
 	{
 		ray->hit = h_hit;
 		ray->distance = h_dist;
+		ray->was_hit_vertical = 0;
 	}
 	else if (v_found)
 	{
 		ray->hit = v_hit;
 		ray->distance = v_dist;
+		ray->was_hit_vertical = 1;
 	}
 	else{
 		ray->hit = ray->player; // no hit
 		ray->distance = 0;
+		ray->was_hit_vertical = -1;
 	}
 }
 
@@ -39,6 +42,7 @@ void _cast_all_rays(t_data_game *g)
 {
 	t_ray ray;
 	short i;
+	int color;
 
 	ray.ray_angle = g->player->angle - FOV / 2;
 	ray.step_angle = FOV / WINDOW_WIDTH;
@@ -56,6 +60,10 @@ void _cast_all_rays(t_data_game *g)
         // Wall height based on projection
 		double wall_height = (TILE_SIZE / perp_dist) * dist_proj_plane;
         // Top & bottom Y positions
+		if (ray.was_hit_vertical)
+			color = GRAY;
+		else
+			color = YELLOW;
 		int wall_top = (WINDOW_HEIGHT / 2) - wall_height / 2;
 		if (wall_top < 0)
 			wall_top = 0;
@@ -64,7 +72,7 @@ void _cast_all_rays(t_data_game *g)
 			wall_bottom = WINDOW_HEIGHT;
         // Draw wall stripe (centered vertically)
 		for (int y = wall_top; y < wall_bottom; y++)
-			my_mlx_pixel_put(g->_img, i, y, 0xBBBBBB);
+			my_mlx_pixel_put(g->_img, i, y, color);
 		ray.ray_angle += ray.step_angle;
 	}
 }
