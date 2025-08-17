@@ -119,6 +119,7 @@ typedef	struct s_ray
 	double		distance;//
 	double		h_distance;
 	double		v_distance;
+	double		was_hit_vertical;
 	int		wall_type;
 	t_point		player;
 	t_point		first_inters_h;
