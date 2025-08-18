@@ -22,6 +22,7 @@ MANAGE_PLAYER_DIR = $(SRC_DIR)/manage_player
 PARSING_DIR = $(SRC_DIR)/parsing
 RAYCASTING_DIR = $(SRC_DIR)/raycasting
 SRC_GETLINE = $(GETLINE_DIR)/get_next_line.c 
+RENDER_TEXTURE_DIR = $(SRC_DIR)/render_texture
 
 SRC	= $(SRC_DIR)/main.c \
 	  $(PARSING_DIR)/check_file_name.c \
@@ -42,7 +43,8 @@ SRC	= $(SRC_DIR)/main.c \
 	  $(RAYCASTING_DIR)/vertical_intersection.c \
 	  $(RAYCASTING_DIR)/horizontal_intersection.c \
 	  $(RAYCASTING_DIR)/render_background.c \
-	  $(RAYCASTING_DIR)/ray_casting.c
+	  $(RAYCASTING_DIR)/ray_casting.c \
+	  $(RENDER_TEXTURE_DIR)/init_textures.c \
 
 SRC += $(SRC_GETLINE)
 

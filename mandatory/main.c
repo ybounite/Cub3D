@@ -6,7 +6,7 @@
 /*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 15:45:16 by ybounite          #+#    #+#             */
-/*   Updated: 2025/08/15 11:06:55 by bamezoua         ###   ########.fr       */
+/*   Updated: 2025/08/18 09:29:48 by bamezoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ int main(int ac, char **av)
 	if (!parsing(av[1], _game))
 		return (ft_malloc(CLEAR, CLEAR), EXIT_FAILURE);
 	player_init(_game);
+	init_textures(_game);
 	printf("poist p_x : %f\n", _game->player->_x);
 	printf("poist p_y : %f\n", _game->player->_y);
 	

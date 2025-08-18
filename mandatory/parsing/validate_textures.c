@@ -6,7 +6,7 @@
 /*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 12:39:41 by ybounite          #+#    #+#             */
-/*   Updated: 2025/08/15 11:13:46 by bamezoua         ###   ########.fr       */
+/*   Updated: 2025/08/18 10:40:53 by bamezoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,33 @@ int	shift_color(int r, int g, int b)
 	return (r << 16 | g << 8 | b);
 }
 
+void	check_spaces(t_config *_config)
+{
+	short	i;
+	short	j;
+
+	i = 4;
+	while (_config->textures[i])
+	{
+		j = 0;
+		while (_config->textures[i][j])
+		{
+			if (_config->textures[i][j] == ' '
+				|| _config->textures[i][j] == '\t'
+				|| (_config->textures[i][j] == ',' && (_config->textures[i][j
+						+ 1] == ',')))
+			{
+				printf("Error: Invalid character in color texture\n");
+				syntax_error(6);
+				ft_malloc(CLEAR, CLEAR);
+				exit(EXIT_FAILURE);
+			}
+			j++;
+		}
+		i++;
+	}
+}
+
 void	validate_colors(t_config *_config, t_data_game *_game)
 {
 	short	i;
@@ -93,16 +120,11 @@ void	validate_colors(t_config *_config, t_data_game *_game)
 
 	int r, g, b;
 	i = 4;
+	check_spaces(_config);
 	while (i < 6)
 	{
 		split = ft_split(_config->textures[i], ',');
-		if (!split || ft_strlen(_config->textures[i]) == 0)
-		{
-			printf("Error : Invalid color format in texture\n");
-			ft_malloc(CLEAR, CLEAR);
-			exit(1);
-		}
-		if (!split[0] || !split[1] || !split[2] || split[3])
+		if (!split | !split[0] || !split[1] || !split[2] || split[3])
 		{
 			printf("Error : Color must be R,G,B format\n");
 			ft_malloc(CLEAR, CLEAR);
@@ -112,17 +134,11 @@ void	validate_colors(t_config *_config, t_data_game *_game)
 		g = ft_atoi(split[1]);
 		b = ft_atoi(split[2]);
 		if (i == 4)
-		{
 			_config->floor_color = mlx_get_color_value(_game->_mlx,
 					shift_color(r, g, b));
-			printf("floor color: %d\n", _config->floor_color);
-		}
 		else if (i == 5)
-		{
 			_config->ceiling_color = mlx_get_color_value(_game->_mlx,
 					shift_color(r, g, b));
-			printf("ceiling color: %d\n", _config->ceiling_color);
-		}
 		i++;
 	}
 }
