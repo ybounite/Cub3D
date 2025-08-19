@@ -6,7 +6,7 @@
 /*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 12:00:00 by bamezoua          #+#    #+#             */
-/*   Updated: 2025/08/18 11:28:06 by bamezoua         ###   ########.fr       */
+/*   Updated: 2025/08/19 10:11:45 by bamezoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,6 +160,7 @@ void	draw_minimap_player(t_data_game *_game)
 			i++;
 		}
 	}
+	
 }
 
 void	draw_minimap(t_data_game *_game)
