@@ -6,7 +6,7 @@
 /*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 15:45:16 by ybounite          #+#    #+#             */
-/*   Updated: 2025/08/18 09:29:48 by bamezoua         ###   ########.fr       */
+/*   Updated: 2025/08/19 10:00:41 by bamezoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ int	render(t_data_game *g)
 		//>sdraw_line(g);
 	        //cast_ray(g, &ray);
 		//_draw_line(g, ray.player, ray.hit, 0xFFFFFF);
+		draw_minimap(g);
 		mlx_put_image_to_window(g->_mlx, g->_win_mlx, g->_img->img, 0, 0);
 		frame = 0;
 	}
@@ -100,6 +101,7 @@ int main(int ac, char **av)
 		return (ft_malloc(CLEAR, CLEAR), EXIT_FAILURE);
 	player_init(_game);
 	init_textures(_game);
+	init_textures_data(_game);
 	printf("poist p_x : %f\n", _game->player->_x);
 	printf("poist p_y : %f\n", _game->player->_y);
 	
