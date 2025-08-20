@@ -38,260 +38,150 @@ void	cast_ray(t_data_game *g, t_ray *ray)
 	}
 }
 
-void _cast_all_rays(t_data_game *g)
+unsigned int	get_pixel(t_imag *tex, int x, int y)
 {
-	t_ray ray;
-	short i;
-	int color;
+	char	*dst;
 
-	ray.ray_angle = g->player->angle - FOV / 2;
-	ray.step_angle = FOV / WINDOW_WIDTH;
-	ray.player.x = g->player->_x;
-	ray.player.y = g->player->_y;
+	if (x < 0 || x >= tex->width || y < 0 || y >= tex->height)
+		return (0xFF00FF); // fallback magenta for errors
 
-    // Distance from player to projection plane (in pixels)
+	dst = tex->addr + (y * tex->line_len + x * (tex->bit_per_pixel / 8));
+	return (*(unsigned int *)dst);
+}
+
+t_imag	*choose_texture(t_data_game *g, t_ray *ray)
+{
+	if (ray->was_hit_vertical)
+	{
+		if (is_facing_left(ray->ray_angle))
+			return (g->texture->WE_img);
+		else
+			return (g->texture->EA_img);
+	}
+	else
+	{
+		if (is_facing_up(ray->ray_angle))
+			return (g->texture->NO_img);
+		else
+			return (g->texture->SO_img);
+	}
+}
+
+void	init_ray(t_ray *ray, t_data_game *_game)
+{
+	ray->ray_angle = _game->player->angle - (FOV / 2.0);
+	ray->step_angle = FOV / WINDOW_WIDTH;
+	ray->player.x = _game->player->_x;
+	ray->player.y = _game->player->_y;
+	ray->dist_proj_plane = (WINDOW_HEIGHT / 2.0) / tan(FOV / 2.0);
+}
+/*
+void	_cast_all_rays(t_data_game *g)
+{
+	t_ray	ray;
+	short	i;
+
+	init_ray(&ray, g);
+	//ray.ray_angle = g->player->angle - (FOV / 2);
+	//ray.step_angle = FOV / WINDOW_WIDTH;
+	//ray.player.x = g->player->_x;
+	//ray.player.y = g->player->_y;
+
+	// distance from player to projection plane
 	double dist_proj_plane = (WINDOW_HEIGHT / 2) / tan(FOV / 2);
+
 	for (i = 0; i < WINDOW_WIDTH; i++)
 	{
 		normalize_angle(&ray.ray_angle);
 		cast_ray(g, &ray);
-        // Correct fish-eye
+
+		// correct fish-eye
 		double perp_dist = ray.distance * cos(ray.ray_angle - g->player->angle);
-        // Wall height based on projection
+		if (perp_dist < 0.0001) perp_dist = 0.0001; // avoid div by 0
+
+		// wall projected height
 		double wall_height = (TILE_SIZE / perp_dist) * dist_proj_plane;
-        // Top & bottom Y positions
-		if (ray.was_hit_vertical)
-			color = GRAY;
-		else
-			color = YELLOW;
-		int wall_top = (WINDOW_HEIGHT / 2) - wall_height / 2;
+
+		// top & bottom Y
+		int wall_top = (WINDOW_HEIGHT / 2) - (wall_height / 2);
 		if (wall_top < 0)
 			wall_top = 0;
-		int wall_bottom = (WINDOW_HEIGHT / 2) + wall_height / 2;
+		int wall_bottom = (WINDOW_HEIGHT / 2) + (wall_height / 2);
 		if (wall_bottom > WINDOW_HEIGHT)
 			wall_bottom = WINDOW_HEIGHT;
-        // Draw wall stripe (centered vertically)
+
+		// pick texture
+		t_imag *tex = choose_texture(g, &ray);
+
+		// find X coordinate in texture
+		int tex_x;
+		if (ray.was_hit_vertical)
+			tex_x = (int)fmod(ray.hit.y, TILE_SIZE);
+		else
+			tex_x = (int)fmod(ray.hit.x, TILE_SIZE);
+		tex_x = (tex_x * tex->width) / TILE_SIZE;
+
+		// draw vertical stripe
 		for (int y = wall_top; y < wall_bottom; y++)
+		{
+			int d = (y - wall_top) * tex->height;
+			int tex_y = d / wall_height;
+			unsigned int color = get_pixel(tex, tex_x, tex_y);
 			my_mlx_pixel_put(g->_img, i, y, color);
+		}
 		ray.ray_angle += ray.step_angle;
 	}
 }
-
-/*
-double	normaliz_angle(double ray_angle)
-{
-	if (ray_angle < 0) // Normalize angle between 0 and 2π
-		ray_angle += 2 * PI;
-	if (ray_angle > 2 * PI)
-		ray_angle -= 2 * PI;
-	return (ray_angle);
-}
-
-void init_ray(t_ray *ray, t_data_game *data)
-{
-	ray->ray_angle = data->player->angle - (FOV / 2);
-	ray->angle_step = FOV / NUM_RAYS;
-}
-/ hhhhh
-double	cast_single_ray(t_data_game *_game, int *hit_vertical)
-{
-	double (x), (y), (dx), (dy);
-
-	x = _game->player->_x;
-	y = _game->player->_y;
-	dx = cos(_game->player->angle) * -1;
-	dy = sin(_game->player->angle) * -1;
-	while (true)
-	{
-		if (_game->map[(int)(y / TILE_SIZE)][(int)(x / TILE_SIZE)] == '1')
-		{
-			*hit_vertical = 0;
-			break ;
-		}
-		x += dx;
-		y += dy;
-	}
-	return (sqrt(pow((x - _game->player->_x), 2)) + pow((y - _game->player->_y), 2));
-}
-
-void	draw_3d_projection(t_data_game *_game, int column, double ray_angle, int hit_vertical)
-{
-    // Fisheye correction
-    double corrected = _game->ray.distance * cos(ray_angle - _game->player->angle);
-
-    // Projected wall height
-    double proj_plane = (WINDOW_WIDTH / 2) / tan(FOV / 2);
-    double wall_height = (TILE_SIZE / corrected) * proj_plane;
-
-    int wall_top = (WINDOW_HEIGHT / 2) - (wall_height / 2);
-    int wall_bottom = (WINDOW_HEIGHT / 2) + (wall_height / 2);
-
-    int wall_color = hit_vertical ? 0xAAAAAA : 0xFFFFFF;
-
-    // Draw column (vertical line)
-    for (int y = 0; y < WINDOW_HEIGHT; y++)
-    {
-        if (y < wall_top)
-            my_mlx_pixel_put(_game->_img, column, y, 0x87CEEB); // Sky
-        else if (y >= wall_top && y <= wall_bottom)
-            my_mlx_pixel_put(_game->_img, column, y, wall_color); // Wall
-        else
-            my_mlx_pixel_put(_game->_img, column, y, 0x333333); // Floor
-    }
-}
-
-void	draw_ray(t_data_game *_game, double angle, int color)
-{
-	double rx = _game->player->_x;
-	double ry = _game->player->_y;
-
-	double dx = cos(angle) * -1;
-	double dy = sin(angle) * -1;
-	while (true)
-	{
-        	int map_x = (int)(rx / TILE_SIZE);
-	        int map_y = (int)(ry / TILE_SIZE);
-        	if (_game->map[map_y][map_x] == '1')
-	            break;
-	        if (rx < 0 || ry < 0 || map_x >= _game->map_width || map_y >= _game->map_height)
-        	    break;
-	        my_mlx_pixel_put(_game->_img, (int)rx, (int)ry, color);
-	        rx += dx;
-        	ry += dy;
-	}
-}
-
-void	cast_all_rays(t_data_game *_game)
-{
-	double	start_angle;
-	double	ray_angle;
-	short	i;
-	int hit_vertical;
-
-	i = 0;
-	start_angle = _game->player->angle - (FOV / 2);
-	while (i < NUM_RAYS)
-	{
-		ray_angle = start_angle + i * (FOV / NUM_RAYS);
-		ray_angle = config_normaliz_angle(ray_angle);
-		_game->ray.distance = cast_single_ray(_game, &hit_vertical);
-		draw_3d_projection(_game, i, ray_angle, hit_vertical);
-		//draw_ray(_game, ray_angle, 0x00FF00); // Green color for visibility
-		i++;
-	}
-}
-
-// Horizontal intersection (DDA simplification)
-void check_horizontal_intersect(t_data_game *data, t_ray *ray)
-{
-	double x = data->player->_x;
-	double y = data->player->_y;
-	double dx = cos(ray->ray_angle);
-	double dy = sin(ray->ray_angle);
-
-	while (true)
-	{
-		int map_x = (int)(x / TILE_SIZE);
-		int map_y = (int)(y / TILE_SIZE);
-		if (map_x < 0 || map_x >= WINDOW_WIDTH || map_y < 0 || map_y >= WINDOW_HEIGHT)
-			break;
-		if (data->map[map_y][map_x] == '1')
-		{
-			ray->wall_hit_x = x;
-			ray->wall_hit_y = y;
-			ray->distance = sqrt(pow(x - data->player->_x, 2) + pow(y - data->player->_y, 2));
-			ray->wall_type = HORIZONTAL;
-			break;
-		}
-		x += dx;
-		y += dy;
-	}
-}
-
-// Vertical intersection (same as above for now, can be optimized separately)
-void check_vertical_intersect(t_data_game *data, t_ray *ray)
-{
-	double x = data->player->_x;
-	double y = data->player->_y;
-	double dx = cos(ray->ray_angle);
-	double dy = sin(ray->ray_angle);
-
-	while (true)
-	{
-		int map_x = (int)(x / TILE_SIZE);
-		int map_y = (int)(y / TILE_SIZE);
-		if (map_x < 0 || map_x >= WINDOW_WIDTH || map_y < 0 || map_y >= WINDOW_HEIGHT)
-			break;
-		if (data->map[map_y][map_x] == '1')
-		{
-			double distance = sqrt(pow(x - data->player->_x, 2) + pow(y - data->player->_y, 2));
-			if (distance < ray->distance || ray->wall_type == NONE)
-			{
-				ray->wall_hit_x = x;
-				ray->wall_hit_y = y;
-				ray->distance = distance;
-				ray->wall_type = VERTICAL;
-			}
-			break;
-		}
-		x += dx;
-		y += dy;
-	}
-}
-
-// Calculate distance and color
-void calc_distance(t_data_game *data, t_ray *ray, int *color)
-{
-	double angle_diff = normaliz_angle(ray->ray_angle - data->player->angle);
-	ray->distance *= cos(angle_diff);
-	if (ray->wall_type == VERTICAL)
-		*color = DARK_GRAY;
-	else
-		*color = WHITE;
-}
-
-// Project wall on screen
-void wall_projection(t_data_game *data, t_ray *ray, int *color, int col)
-{
-	double dist_to_proj_plane = (WINDOW_WIDTH / 2) / tan(FOV / 2);
-	double wall_height = (TILE_SIZE / ray->distance) * dist_to_proj_plane;
-
-	int wall_top = (WINDOW_HEIGHT / 2) - (wall_height / 2);
-	int wall_bottom = (WINDOW_HEIGHT / 2) + (wall_height / 2);
-	if (wall_top < 0) wall_top = 0;
-	if (wall_bottom > WINDOW_HEIGHT) wall_bottom = WINDOW_HEIGHT;
-
-	for (int y = 0; y < WINDOW_HEIGHT; y++)
-	{
-		if (y < wall_top)
-			my_mlx_pixel_put(data->_img, col, y, 0x87CEEB); // Sky
-		else if (y >= wall_top && y <= wall_bottom)
-			my_mlx_pixel_put(data->_img, col, y, *color);   // Wall
-		else
-			my_mlx_pixel_put(data->_img, col, y, 0x333333); // Floor
-	}
-}
-
-// Raycasting and rendering
-void cast_all_rays(t_data_game *data)
-{
-	t_ray ray;
-	int i = 0;
-	int color;
-
-	init_ray(&ray, data);
-
-	while (i < NUM_RAYS)
-	{
-		ray.wall_type = NONE;
-		ray.distance = 0;
-		check_horizontal_intersect(data, &ray);
-		check_vertical_intersect(data, &ray);
-		calc_distance(data, &ray, &color);
-		wall_projection(data, &ray, &color, i);
-		ray.ray_angle += ray.angle_step;
-		ray.ray_angle = normaliz_angle(ray.ray_angle);
-		i++;
-	}
-}
 */
+
+void	_render_wall_slice(t_data_game *_game, t_ray *ray, int i)
+{
+	double	perp_dist;
+	double	wall_height;
+	int	wall_top;
+	int	wall_bottom;
+
+	// correct this distance to avoid fish-eye distance
+	perp_dist = ray->distance * cos(ray->ray_angle - _game->player->angle);
+	wall_height = (TILE_SIZE / perp_dist) * ray->dist_proj_plane;
+	wall_top = (WINDOW_HEIGHT / 2.0) - wall_height / 2.0;
+	if (wall_top < 0)
+		wall_top = 0;
+	wall_bottom = (WINDOW_HEIGHT / 2.0) + wall_height / 2.0;
+	if (wall_bottom > WINDOW_HEIGHT)
+		wall_bottom = WINDOW_HEIGHT;
+
+	//printf("lower wall or wall bottom : %d and wall top : %d\n", wall_bottom , wall_top);
+	t_imag *tex = choose_texture(_game, ray);
+	//	 find X coordinate in texture
+	int	tex_x;
+	if (ray->was_hit_vertical)
+		tex_x = (int)fmod(ray->hit.y, TILE_SIZE);
+	else
+		tex_x = (int)fmod(ray->hit.x, TILE_SIZE);
+	tex_x = (tex_x * tex->width) / TILE_SIZE;
+
+		// draw vertical stripe
+	for (int y = wall_top; y < wall_bottom; y++)
+	{
+		int d = (y - wall_top) * tex->height;
+		int tex_y = d / wall_height;
+		unsigned int color = get_pixel(tex, tex_x, tex_y);
+		my_mlx_pixel_put(_game->_img, i, y, color);
+	}
+}
+
+void	_cast_all_rays(t_data_game *g)
+{
+	t_ray	ray;
+	short	i;
+
+	init_ray(&ray, g);
+	for (i = 0; i < WINDOW_WIDTH; i++)
+	{
+		normalize_angle(&ray.ray_angle);
+		cast_ray(g, &ray);
+		_render_wall_slice(g, &ray, i);
+		ray.ray_angle += ray.step_angle;
+	}
+}
