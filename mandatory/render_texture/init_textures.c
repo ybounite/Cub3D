@@ -15,12 +15,10 @@
 void	init_textures(t_data_game *_game)
 {
 	_game->texture = ft_malloc(sizeof(t_texture), ALLOC);
-	_game->texture->config = _game;
-	_game->texture->NO = _game->config->textures[0];
-	_game->texture->SO = _game->config->textures[1];
-	_game->texture->WE = _game->config->textures[2];
-	_game->texture->EA = _game->config->textures[3];
-	printf("%s\n", _game->texture->EA);
+	_game->texture->NO = _game->config->textures[NO_TEXTURE];
+	_game->texture->SO = _game->config->textures[SO_TEXTURE];
+	_game->texture->WE = _game->config->textures[WE_TEXTURE];
+	_game->texture->EA = _game->config->textures[EA_TEXTURE];
 }
 
 void	init_textures_address(t_texture *texture, t_data_game *_game)
