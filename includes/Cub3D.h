@@ -127,9 +127,10 @@ typedef struct s_ray
 	double		distance;
 	double		h_distance;
 	double		v_distance;
-	double		was_hit_vertical;
+	int		was_hit_vertical;
 	double		dist_proj_plane;
 	int			wall_type;
+	t_point 	ray_dir;
 	t_point		player;
 	t_point		first_inters_h;
 	t_point		first_inters_v;
@@ -139,8 +140,17 @@ typedef struct s_ray
 	t_point		v_inters;
 	t_point		h_inters; // this forst point this
 }			t_ray;
-
-typedef struct s_texture	t_texture;
+typedef struct s_texture
+{
+	char		*NO;
+	char		*SO;
+	char		*WE;
+	char		*EA;
+	t_imag		*NO_img;
+	t_imag		*SO_img;
+	t_imag		*WE_img;
+	t_imag		*EA_img;
+}			t_texture;
 
 typedef struct s_game
 {
@@ -162,18 +172,7 @@ typedef struct s_game
 	t_texture	*texture;
 }			t_data_game;
 
-typedef struct s_texture
-{
-	char		*NO;
-	char		*SO;
-	char		*WE;
-	char		*EA;
-	t_imag		*NO_img;
-	t_imag		*SO_img;
-	t_imag		*WE_img;
-	t_imag		*EA_img;
-	t_data_game	*config;
-}			t_texture;
+
 
 /* -------------------------------------------------------------------------- */
 /*                             check_file_name.c                              */
