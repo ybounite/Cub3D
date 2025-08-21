@@ -50,17 +50,11 @@ bool	parse_texture_line(t_data_game *_game, char *line)
 	return false;
 }
 
-// bool	istexturs(char *line)
-// {
-// 	return (!ft_strncmp(line, "NO ", 3) || !ft_strncmp(line, "SO ", 3)
-// 			|| !ft_strncmp(line, "WE ", 3) || !ft_strncmp(line, "EA ", 3));
-// }
-
 bool	isconfig(char *line)
 {
 	return (!ft_strncmp(line, "NO ", 3) || !ft_strncmp(line, "SO ", 3)
 		|| !ft_strncmp(line, "WE ", 3) || !ft_strncmp(line, "EA ", 3)
-		||	!ft_strncmp(line, "C ", 2) || !ft_strncmp(line, "F ", 2));
+		|| !ft_strncmp(line, "C ", 2) || !ft_strncmp(line, "F ", 2));
 }
 
 bool	is_emty_line(char *str)
