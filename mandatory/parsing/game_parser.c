@@ -52,19 +52,10 @@ bool	parsing(char *filename, t_data_game *_game)
 		return (ft_putendl_fd("Error\nMap is empty", STDERR), false);
 	parse_config(_game);
 	validate_textures(_game->config);
-	// // check this texter in valide ? => check mlx_xpm_file_to_image -> use while for 4 textures for check all textures
-	// // in function validate_textures you have while loop can you use it
-
-	//---------------------------------------------------------------------------
-	// check color is valide range {0, 255}
 	validate_colors(_game->config, _game);
 	_game->map = parse_map(_game);
 	_game->map_height = _game->size;
 	_game->map_width = (int)ft_strlen(_game->map[1]);
-    printf("map height or rows %d\n", _game->map_height); //rows
-	printf("map whidth or cols %d\n", _game->map_width); //cols
-	for (int i =0; _game->map[i]; i++)
-		printf("line[%d] : %s\n", i,_game->map[i]);
 	if (!check_allowed_characters(_game))
 		return false;
 	// flood fill check
