@@ -12,17 +12,20 @@
 
 #include "../../includes/Cub3D.h"
 
+#include "../../includes/Cub3D.h"
+
 void	cast_ray(t_data_game *g, t_ray *ray)
 {
 	t_point h_hit, v_hit;
 	double h_dist = 1e30, v_dist = 1e30;
 	bool h_found = cast_horizontal(g, ray, &h_hit, &h_dist);
+	printf("cast_horizontal: found=%d, dist=%f\n", h_found, h_dist);
 	bool v_found = cast_vertical(g, ray, &v_hit, &v_dist);
-
+	printf("cast_vertical: found=%d, dist=%f\n", v_found, v_dist);
 	if (h_found && (!v_found || h_dist < v_dist))
 	{
 		ray->hit = h_hit;
-		ray->distance = h_dist;
+		ray->distance = h_dist; 
 		ray->was_hit_vertical = 0;
 	}
 	else if (v_found)
@@ -36,6 +39,7 @@ void	cast_ray(t_data_game *g, t_ray *ray)
 		ray->distance = 0;
 		ray->was_hit_vertical = -1;
 	}
+	printf("was_hit_vertical = %d, angle = %f\n", ray->was_hit_vertical, ray->ray_angle);
 }
 
 unsigned int	get_pixel(t_imag *tex, int x, int y)
@@ -43,27 +47,37 @@ unsigned int	get_pixel(t_imag *tex, int x, int y)
 	char	*dst;
 
 	if (x < 0 || x >= tex->width || y < 0 || y >= tex->height)
-		return (0xFF00FF); // fallback magenta for errors
-
+		return (0xFF00FF);
 	dst = tex->addr + (y * tex->line_len + x * (tex->bit_per_pixel / 8));
 	return (*(unsigned int *)dst);
 }
 
 t_imag	*choose_texture(t_data_game *g, t_ray *ray)
 {
-	if (ray->was_hit_vertical)
+	if (ray->was_hit_vertical == 1)
 	{
-		if (is_facing_left(ray->ray_angle))
+		if (ray->ray_dir.x > 0){
+
+			printf("image WE %s\n", g->texture->WE);
 			return (g->texture->WE_img);
-		else
+		}
+		else{
+			printf("image EA %s\n", g->texture->EA);
 			return (g->texture->EA_img);
+		}
 	}
 	else
 	{
-		if (is_facing_up(ray->ray_angle))
+		if (ray->ray_dir.y > 0)
+		{
+
+			printf("image NO %s\n", g->texture->NO);
 			return (g->texture->NO_img);
-		else
+		}
+		else{
+			printf("image SO %s\n", g->texture->SO);
 			return (g->texture->SO_img);
+		}
 	}
 }
 
@@ -75,6 +89,89 @@ void	init_ray(t_ray *ray, t_data_game *_game)
 	ray->player.y = _game->player->_y;
 	ray->dist_proj_plane = (WINDOW_HEIGHT / 2.0) / tan(FOV / 2.0);
 }
+
+unsigned int	blend_color(unsigned int src, unsigned int bg, double alpha)
+{
+	int r1 = (src >> 16) & 0xFF;
+	int g1 = (src >> 8) & 0xFF;
+	int b1 = src & 0xFF;
+
+	int r2 = (bg >> 16) & 0xFF;
+	int g2 = (bg >> 8) & 0xFF;
+	int b2 = bg & 0xFF;
+
+	int r = (int)(r1 * alpha + r2 * (1 - alpha));
+	int g = (int)(g1 * alpha + g2 * (1 - alpha));
+	int b = (int)(b1 * alpha + b2 * (1 - alpha));
+
+	return (r << 16) | (g << 8) | b;
+}
+
+void	_render_wall_slice(t_data_game *_game, t_ray *ray, int i)
+{
+	double	perp_dist;
+	double	wall_height;
+	int	wall_top;
+	int	wall_bottom;
+
+	// correct fish-ey
+	ray->ray_dir.x = cos(ray->ray_angle);
+	ray->ray_dir.y = sin(ray->ray_angle);
+	perp_dist = ray->distance * cos(ray->ray_angle - _game->player->angle);
+	wall_height = (TILE_SIZE / perp_dist) * ray->dist_proj_plane;
+	wall_top = (WINDOW_HEIGHT / 2.0) - wall_height / 2.0;
+	if (wall_top < 0)
+		wall_top = 0;
+	wall_bottom = (WINDOW_HEIGHT / 2.0) + wall_height / 2.0;
+	if (wall_bottom > WINDOW_HEIGHT)
+		wall_bottom = WINDOW_HEIGHT;
+
+	t_imag *tex = choose_texture(_game, ray);
+
+	// find texture X
+	int tex_x;
+	if (ray->was_hit_vertical)
+		tex_x = (int)fmod(ray->hit.y, TILE_SIZE);
+	else
+		tex_x = (int)fmod(ray->hit.x, TILE_SIZE);
+	tex_x = (tex_x * tex->width) / TILE_SIZE;
+	printf("choose textures : %p", tex->img);
+	// draw vertical stripe
+	for (int y = wall_top; y < wall_bottom; y++)
+	{
+		int destanceFromTop = y + (wall_height/2.0) - (WINDOW_HEIGHT/2.0);
+		int d= destanceFromTop * tex->height;
+		int tex_y = d / wall_height;
+		unsigned int color = get_pixel(tex, tex_x, tex_y);
+		// transparency effect based on distance
+		double max_dist = 800.0; // adjust fog distance
+		double alpha = 1.0 - (ray->distance / max_dist);
+		if (alpha < 0)
+			alpha = 0;
+		if (alpha > 1)
+			alpha = 1;
+		// fade into black (or could use floor/sky colors)
+		unsigned int bg_color = BLACK;
+		unsigned int final_color = blend_color(color, bg_color, alpha);
+		my_mlx_pixel_put(_game->_img, i, y, final_color);
+	}
+}
+
+void	_cast_all_rays(t_data_game *g)
+{
+	t_ray	ray;
+	short	i;
+
+	init_ray(&ray, g);
+	for (i = 0; i < WINDOW_WIDTH; i++)
+	{
+		normalize_angle(&ray.ray_angle);
+		cast_ray(g, &ray);
+		_render_wall_slice(g, &ray, i);
+		ray.ray_angle += ray.step_angle;
+	}
+}
+
 /*
 void	_cast_all_rays(t_data_game *g)
 {
@@ -134,54 +231,3 @@ void	_cast_all_rays(t_data_game *g)
 }
 */
 
-void	_render_wall_slice(t_data_game *_game, t_ray *ray, int i)
-{
-	double	perp_dist;
-	double	wall_height;
-	int	wall_top;
-	int	wall_bottom;
-
-	// correct this distance to avoid fish-eye distance
-	perp_dist = ray->distance * cos(ray->ray_angle - _game->player->angle);
-	wall_height = (TILE_SIZE / perp_dist) * ray->dist_proj_plane;
-	wall_top = (WINDOW_HEIGHT / 2.0) - wall_height / 2.0;
-	if (wall_top < 0)
-		wall_top = 0;
-	wall_bottom = (WINDOW_HEIGHT / 2.0) + wall_height / 2.0;
-	if (wall_bottom > WINDOW_HEIGHT)
-		wall_bottom = WINDOW_HEIGHT;
-
-	//printf("lower wall or wall bottom : %d and wall top : %d\n", wall_bottom , wall_top);
-	t_imag *tex = choose_texture(_game, ray);
-	//	 find X coordinate in texture
-	int	tex_x;
-	if (ray->was_hit_vertical)
-		tex_x = (int)fmod(ray->hit.y, TILE_SIZE);
-	else
-		tex_x = (int)fmod(ray->hit.x, TILE_SIZE);
-	tex_x = (tex_x * tex->width) / TILE_SIZE;
-
-		// draw vertical stripe
-	for (int y = wall_top; y < wall_bottom; y++)
-	{
-		int d = (y - wall_top) * tex->height;
-		int tex_y = d / wall_height;
-		unsigned int color = get_pixel(tex, tex_x, tex_y);
-		my_mlx_pixel_put(_game->_img, i, y, color);
-	}
-}
-
-void	_cast_all_rays(t_data_game *g)
-{
-	t_ray	ray;
-	short	i;
-
-	init_ray(&ray, g);
-	for (i = 0; i < WINDOW_WIDTH; i++)
-	{
-		normalize_angle(&ray.ray_angle);
-		cast_ray(g, &ray);
-		_render_wall_slice(g, &ray, i);
-		ray.ray_angle += ray.step_angle;
-	}
-}
