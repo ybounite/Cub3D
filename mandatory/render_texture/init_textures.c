@@ -27,13 +27,13 @@ void	init_textures_address(t_texture *texture, t_data_game *_game)
 	texture->NO_img->addr = mlx_get_data_addr(texture->NO_img->img,
 			&texture->NO_img->bit_per_pixel,
 			&texture->NO_img->line_len, &texture->NO_img->endian);
-	texture->EA_img->addr = mlx_get_data_addr(texture->NO_img->img,
+	texture->EA_img->addr = mlx_get_data_addr(texture->EA_img->img,
 			&texture->EA_img->bit_per_pixel,
 			&texture->EA_img->line_len, &texture->EA_img->endian);
-	texture->WE_img->addr = mlx_get_data_addr(texture->NO_img->img,
+	texture->WE_img->addr = mlx_get_data_addr(texture->WE_img->img,
 			&texture->WE_img->bit_per_pixel,
 			&texture->WE_img->line_len, &texture->WE_img->endian);
-	texture->SO_img->addr = mlx_get_data_addr(texture->NO_img->img,
+	texture->SO_img->addr = mlx_get_data_addr(texture->SO_img->img,
 			&texture->SO_img->bit_per_pixel,
 			&texture->SO_img->line_len, &texture->SO_img->endian);
 	if (!texture->NO_img->addr || !texture->SO_img->addr
