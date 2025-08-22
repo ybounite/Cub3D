@@ -19,9 +19,7 @@ void	cast_ray(t_data_game *g, t_ray *ray)
 	t_point h_hit, v_hit;
 	double h_dist = 1e30, v_dist = 1e30;
 	bool h_found = cast_horizontal(g, ray, &h_hit, &h_dist);
-	printf("cast_horizontal: found=%d, dist=%f\n", h_found, h_dist);
 	bool v_found = cast_vertical(g, ray, &v_hit, &v_dist);
-	printf("cast_vertical: found=%d, dist=%f\n", v_found, v_dist);
 	if (h_found && (!v_found || h_dist < v_dist))
 	{
 		ray->hit = h_hit;
@@ -39,7 +37,6 @@ void	cast_ray(t_data_game *g, t_ray *ray)
 		ray->distance = 0;
 		ray->was_hit_vertical = -1;
 	}
-	printf("was_hit_vertical = %d, angle = %f\n", ray->was_hit_vertical, ray->ray_angle);
 }
 
 unsigned int	get_pixel(t_imag *tex, int x, int y)
@@ -56,28 +53,18 @@ t_imag	*choose_texture(t_data_game *g, t_ray *ray)
 {
 	if (ray->was_hit_vertical == 1)
 	{
-		if (ray->ray_dir.x > 0){
+		if (ray->ray_dir.x > 0)
 
-			printf("image WE %s\n", g->texture->WE);
 			return (g->texture->WE_img);
-		}
-		else{
-			printf("image EA %s\n", g->texture->EA);
+		else
 			return (g->texture->EA_img);
-		}
 	}
 	else
 	{
 		if (ray->ray_dir.y > 0)
-		{
-
-			printf("image NO %s\n", g->texture->NO);
 			return (g->texture->NO_img);
-		}
-		else{
-			printf("image SO %s\n", g->texture->SO);
+		else
 			return (g->texture->SO_img);
-		}
 	}
 }
 
@@ -135,7 +122,6 @@ void	_render_wall_slice(t_data_game *_game, t_ray *ray, int i)
 	else
 		tex_x = (int)fmod(ray->hit.x, TILE_SIZE);
 	tex_x = (tex_x * tex->width) / TILE_SIZE;
-	printf("choose textures : %p", tex->img);
 	// draw vertical stripe
 	for (int y = wall_top; y < wall_bottom; y++)
 	{
