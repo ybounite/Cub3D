@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_allowed_characters.c                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 16:44:57 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/14 17:55:35 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/08/23 10:08:44 by bamezoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

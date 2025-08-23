@@ -6,7 +6,7 @@
 /*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 14:57:09 by ybounite          #+#    #+#             */
-/*   Updated: 2025/08/19 10:08:22 by bamezoua         ###   ########.fr       */
+/*   Updated: 2025/08/23 09:41:18 by bamezoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,10 @@
 # define DARK_GRAY 0x404040
 
 // Add these defines after your existing ones
-# define MINIMAP_SIZE 200
-# define MINIMAP_SCALE 8
-# define MINIMAP_X 20
-# define MINIMAP_Y 20
-# define MINIMAP_BORDER 2
+#define MINIMAP_RADIUS 70
+#define MINIMAP_CENTER_X 1160
+#define MINIMAP_CENTER_Y (WINDOW_HEIGHT - 90)
+#define MINIMAP_ZOOM 3.0
 
 # define NONE 0
 # define HORIZONTAL 1

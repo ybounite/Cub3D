@@ -6,24 +6,43 @@
 /*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 12:00:00 by bamezoua          #+#    #+#             */
-/*   Updated: 2025/08/19 10:11:45 by bamezoua         ###   ########.fr       */
+/*   Updated: 2025/08/23 09:46:22 by bamezoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/Cub3D.h"
 
+static int	is_inside_circle(int x, int y, int center_x, int center_y,
+		int radius)
+{
+	int	dx;
+	int	dy;
+
+	dx = x - center_x;
+	dy = y - center_y;
+	return (dx * dx + dy * dy <= radius * radius);
+}
+
 static void	draw_minimap_border(t_data_game *_game)
 {
+	int	border_radius;
+
 	int x, y;
-	// Draw border
-	y = MINIMAP_Y - MINIMAP_BORDER;
-	while (y < MINIMAP_Y + MINIMAP_SIZE + MINIMAP_BORDER)
+	border_radius = MINIMAP_RADIUS + 3;
+	// Draw circular border
+	y = MINIMAP_CENTER_Y - border_radius;
+	while (y <= MINIMAP_CENTER_Y + border_radius)
 	{
-		x = MINIMAP_X - MINIMAP_BORDER;
-		while (x < MINIMAP_X + MINIMAP_SIZE + MINIMAP_BORDER)
+		x = MINIMAP_CENTER_X - border_radius;
+		while (x <= MINIMAP_CENTER_X + border_radius)
 		{
 			if (x >= 0 && y >= 0 && x < WINDOW_WIDTH && y < WINDOW_HEIGHT)
-				my_mlx_pixel_put(_game->_img, x, y, WHITE);
+			{
+				if (is_inside_circle(x, y, MINIMAP_CENTER_X, MINIMAP_CENTER_Y,
+						border_radius) && !is_inside_circle(x, y,
+						MINIMAP_CENTER_X, MINIMAP_CENTER_Y, MINIMAP_RADIUS))
+					my_mlx_pixel_put(_game->_img, x, y, WHITE);
+			}
 			x++;
 		}
 		y++;
@@ -33,75 +52,120 @@ static void	draw_minimap_border(t_data_game *_game)
 void	draw_minimap_background(t_data_game *_game)
 {
 	int x, y;
-	// Draw background
-	y = MINIMAP_Y;
-	while (y < MINIMAP_Y + MINIMAP_SIZE)
+	// Draw circular background
+	y = MINIMAP_CENTER_Y - MINIMAP_RADIUS;
+	while (y <= MINIMAP_CENTER_Y + MINIMAP_RADIUS)
 	{
-		x = MINIMAP_X;
-		while (x < MINIMAP_X + MINIMAP_SIZE)
+		x = MINIMAP_CENTER_X - MINIMAP_RADIUS;
+		while (x <= MINIMAP_CENTER_X + MINIMAP_RADIUS)
 		{
 			if (x >= 0 && y >= 0 && x < WINDOW_WIDTH && y < WINDOW_HEIGHT)
-				my_mlx_pixel_put(_game->_img, x, y, BLACK);
+			{
+				if (is_inside_circle(x, y, MINIMAP_CENTER_X, MINIMAP_CENTER_Y,
+						MINIMAP_RADIUS))
+					my_mlx_pixel_put(_game->_img, x, y, BLACK);
+			}
 			x++;
 		}
 		y++;
 	}
 }
 
-void	draw_minimap_walls(t_data_game *_game)
+static void	convert_screen_to_world(t_data_game *_game, int screen_x,
+		int screen_y, t_point *world)
 {
-	int	scale;
+	double	offset_x;
+	double	offset_y;
 
-	int map_x, map_y;
-	int mini_x, mini_y;
-	scale = MINIMAP_SCALE;
-	int dx, dy, pixel_x, pixel_y;
-	map_y = 0;
-	while (map_y < _game->map_height)
+	offset_x = (screen_x - MINIMAP_CENTER_X) * MINIMAP_ZOOM;
+	offset_y = (screen_y - MINIMAP_CENTER_Y) * MINIMAP_ZOOM;
+	world->x = _game->player->_x + offset_x;
+	world->y = _game->player->_y + offset_y;
+}
+
+static void	draw_minimap_pixel(t_data_game *_game, int screen_x, int screen_y,
+		t_point world)
+{
+	int	map_x;
+	int	map_y;
+
+	map_x = (int)(world.x / TILE_SIZE);
+	map_y = (int)(world.y / TILE_SIZE);
+	if (map_x >= 0 && map_y >= 0 && map_y < _game->map_height
+		&& map_x < (int)ft_strlen(_game->map[map_y]))
 	{
-		map_x = 0;
-		while (map_x < (int)ft_strlen(_game->map[map_y]))
-		{
-			mini_x = MINIMAP_X + (map_x * MINIMAP_SIZE) / (_game->map_width);
-			mini_y = MINIMAP_Y + (map_y * MINIMAP_SIZE) / (_game->map_height);
-			// Draw a small square for each map cell
-			dy = 0;
-			while (dy < scale && mini_y + dy < MINIMAP_Y + MINIMAP_SIZE)
-			{
-				dx = 0;
-				while (dx < scale && mini_x + dx < MINIMAP_X + MINIMAP_SIZE)
-				{
-					pixel_x = mini_x + dx;
-					pixel_y = mini_y + dy;
-					if (pixel_x >= MINIMAP_X && pixel_y >= MINIMAP_Y
-						&& pixel_x < MINIMAP_X + MINIMAP_SIZE
-						&& pixel_y < MINIMAP_Y + MINIMAP_SIZE)
-					{
-						if (_game->map[map_y][map_x] == '1')
-							my_mlx_pixel_put(_game->_img, pixel_x, pixel_y,
-								GRAY);
-						else if (_game->map[map_y][map_x] == '0'
-							|| _game->map[map_y][map_x] == 'N'
-							|| _game->map[map_y][map_x] == 'S'
-							|| _game->map[map_y][map_x] == 'E'
-							|| _game->map[map_y][map_x] == 'W')
-							my_mlx_pixel_put(_game->_img, pixel_x, pixel_y,
-								DARK_GRAY);
-					}
-					dx++;
-				}
-				dy++;
-			}
-			map_x++;
-		}
-		map_y++;
+		if (_game->map[map_y][map_x] == '1')
+			my_mlx_pixel_put(_game->_img, screen_x, screen_y, GRAY);
+		else if (_game->map[map_y][map_x] == '0'
+			|| _game->map[map_y][map_x] == 'N'
+			|| _game->map[map_y][map_x] == 'S'
+			|| _game->map[map_y][map_x] == 'E'
+			|| _game->map[map_y][map_x] == 'W')
+			my_mlx_pixel_put(_game->_img, screen_x, screen_y, DARK_GRAY);
 	}
 }
 
-void	draw_minimap_player(t_data_game *_game)
+void	draw_minimap_walls(t_data_game *_game)
 {
-	int		player_mini_x;
-	int		player_mini_y;
+	int		screen_x;
+	int		screen_y;
+	t_point	world;
+
+	screen_y = MINIMAP_CENTER_Y - MINIMAP_RADIUS;
+	while (screen_y <= MINIMAP_CENTER_Y + MINIMAP_RADIUS)
+	{
+		screen_x = MINIMAP_CENTER_X - MINIMAP_RADIUS;
+		while (screen_x <= MINIMAP_CENTER_X + MINIMAP_RADIUS)
+		{
+			if (screen_x >= 0 && screen_y >= 0 && screen_x < WINDOW_WIDTH
+				&& screen_y < WINDOW_HEIGHT)
+			{
+				if (is_inside_circle(screen_x, screen_y, MINIMAP_CENTER_X,
+						MINIMAP_CENTER_Y, MINIMAP_RADIUS))
+				{
+					convert_screen_to_world(_game, screen_x, screen_y, &world);
+					draw_minimap_pixel(_game, screen_x, screen_y, world);
+				}
+			}
+			screen_x++;
+		}
+		screen_y++;
+	}
+}
+
+static void	draw_player_circle(t_data_game *_game)
+{
+	int	dx;
+	int	dy;
+	int	px;
+	int	py;
+
+	dy = -3;
+	while (dy <= 3)
+	{
+		dx = -3;
+		while (dx <= 3)
+		{
+			if (dx * dx + dy * dy <= 9)
+			{
+				px = MINIMAP_CENTER_X + dx;
+				py = MINIMAP_CENTER_Y + dy;
+				if (px >= 0 && py >= 0 && px < WINDOW_WIDTH
+					&& py < WINDOW_HEIGHT)
+				{
+					if (is_inside_circle(px, py, MINIMAP_CENTER_X,
+							MINIMAP_CENTER_Y, MINIMAP_RADIUS))
+						my_mlx_pixel_put(_game->_img, px, py, RED);
+				}
+			}
+			dx++;
+		}
+		dy++;
+	}
+}
+
+static void	draw_direction_line(t_data_game *_game)
+{
 	double	line_length;
 	double	end_x;
 	double	end_y;
@@ -112,38 +176,11 @@ void	draw_minimap_player(t_data_game *_game)
 	int		lx;
 	int		ly;
 
-	// Calculate player position on minimap
-	player_mini_x = MINIMAP_X + (int)((_game->player->_x / TILE_SIZE)
-			* MINIMAP_SIZE) / _game->map_width;
-	player_mini_y = MINIMAP_Y + (int)((_game->player->_y / TILE_SIZE)
-			* MINIMAP_SIZE) / _game->map_height;
-	int dx, dy, px, py;
-	// Draw player as a small red circle
-	dy = -2;
-	while (dy <= 2)
-	{
-		dx = -2;
-		while (dx <= 2)
-		{
-			if (dx * dx + dy * dy <= 4) // Circle radius 2
-			{
-				px = player_mini_x + dx;
-				py = player_mini_y + dy;
-				if (px >= MINIMAP_X && py >= MINIMAP_Y && px < MINIMAP_X
-					+ MINIMAP_SIZE && py < MINIMAP_Y + MINIMAP_SIZE)
-					my_mlx_pixel_put(_game->_img, px, py, RED);
-			}
-			dx++;
-		}
-		dy++;
-	}
-	// Draw player direction line
-	line_length = 8;
-	end_x = player_mini_x + cos(_game->player->angle) * line_length;
-	end_y = player_mini_y + sin(_game->player->angle) * line_length;
-	// Simple line drawing
-	d_dx = end_x - player_mini_x;
-	d_dy = end_y - player_mini_y;
+	line_length = 15;
+	end_x = MINIMAP_CENTER_X + cos(_game->player->angle) * line_length;
+	end_y = MINIMAP_CENTER_Y + sin(_game->player->angle) * line_length;
+	d_dx = end_x - MINIMAP_CENTER_X;
+	d_dy = end_y - MINIMAP_CENTER_Y;
 	steps = fmax(fabs(d_dx), fabs(d_dy));
 	if (steps > 0)
 	{
@@ -152,21 +189,29 @@ void	draw_minimap_player(t_data_game *_game)
 		i = 0;
 		while (i <= (int)steps)
 		{
-			lx = (int)(player_mini_x + d_dx * i);
-			ly = (int)(player_mini_y + d_dy * i);
-			if (lx >= MINIMAP_X && ly >= MINIMAP_Y && lx < MINIMAP_X
-				+ MINIMAP_SIZE && ly < MINIMAP_Y + MINIMAP_SIZE)
-				my_mlx_pixel_put(_game->_img, lx, ly, YELLOW);
+			lx = (int)(MINIMAP_CENTER_X + d_dx * i);
+			ly = (int)(MINIMAP_CENTER_Y + d_dy * i);
+			if (lx >= 0 && ly >= 0 && lx < WINDOW_WIDTH && ly < WINDOW_HEIGHT)
+			{
+				if (is_inside_circle(lx, ly, MINIMAP_CENTER_X, MINIMAP_CENTER_Y,
+						MINIMAP_RADIUS))
+					my_mlx_pixel_put(_game->_img, lx, ly, YELLOW);
+			}
 			i++;
 		}
 	}
-	
+}
+
+void	draw_minimap_player(t_data_game *_game)
+{
+	draw_player_circle(_game);
+	draw_direction_line(_game);
 }
 
 void	draw_minimap(t_data_game *_game)
 {
-	draw_minimap_border(_game);
 	draw_minimap_background(_game);
 	draw_minimap_walls(_game);
 	draw_minimap_player(_game);
+	draw_minimap_border(_game);
 }
