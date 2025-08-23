@@ -139,6 +139,7 @@ typedef struct s_ray
 	t_point		v_inters;
 	t_point		h_inters; // this forst point this
 }			t_ray;
+
 typedef struct s_texture
 {
 	char		*NO;
@@ -150,6 +151,19 @@ typedef struct s_texture
 	t_imag		*WE_img;
 	t_imag		*EA_img;
 }			t_texture;
+
+typedef struct	s_wall_slice
+{
+	double		perp_dist;
+	double		wall_height;
+	double		alpha;
+	int 			wall_top;
+	short			i;
+	int			wall_bottome;
+	int		tex_x;
+	int		tex_y;
+}	t_data_slice;
+
 
 typedef struct s_game
 {
