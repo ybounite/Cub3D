@@ -6,7 +6,7 @@
 /*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 12:00:00 by bamezoua          #+#    #+#             */
-/*   Updated: 2025/08/23 09:46:22 by bamezoua         ###   ########.fr       */
+/*   Updated: 2025/08/23 10:49:49 by bamezoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,8 @@ static void	draw_minimap_pixel(t_data_game *_game, int screen_x, int screen_y,
 	{
 		if (_game->map[map_y][map_x] == '1')
 			my_mlx_pixel_put(_game->_img, screen_x, screen_y, GRAY);
+		else if (_game->map[map_y][map_x] == 'D')
+			my_mlx_pixel_put(_game->_img, screen_x, screen_y, GREEN);
 		else if (_game->map[map_y][map_x] == '0'
 			|| _game->map[map_y][map_x] == 'N'
 			|| _game->map[map_y][map_x] == 'S'

@@ -6,7 +6,7 @@
 /*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 16:44:57 by ybounite          #+#    #+#             */
-/*   Updated: 2025/08/23 10:08:44 by bamezoua         ###   ########.fr       */
+/*   Updated: 2025/08/23 10:49:15 by bamezoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ bool	check_allowed_characters(t_data_game *_game)
 		while (_game->map[y][x])
 		{
 			c = _game->map[y][x];
-			if (!isplayer_position(c) && c != '1'
+			if (!isplayer_position(c) && c != '1' && c != 'D'
 				&& c != '0' && c != ' ' && c != '\n')
 				return (ft_putendl_fd("Error\nInvalid character", STDERR), false);
 			if (isplayer_position(c))
