@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_textures.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybounite <ybounite@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 15:53:10 by ybounite          #+#    #+#             */
-/*   Updated: 2025/08/20 15:55:38 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/08/24 11:10:22 by bamezoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,25 +19,30 @@ void	init_textures(t_data_game *_game)
 	_game->texture->SO = _game->config->textures[SO_TEXTURE];
 	_game->texture->WE = _game->config->textures[WE_TEXTURE];
 	_game->texture->EA = _game->config->textures[EA_TEXTURE];
+	_game->texture->Door = "./textures/open-door.xpm";
 }
 
 void	init_textures_address(t_texture *texture, t_data_game *_game)
 {
 	(void)_game;
 	texture->NO_img->addr = mlx_get_data_addr(texture->NO_img->img,
-			&texture->NO_img->bit_per_pixel,
-			&texture->NO_img->line_len, &texture->NO_img->endian);
+			&texture->NO_img->bit_per_pixel, &texture->NO_img->line_len,
+			&texture->NO_img->endian);
 	texture->EA_img->addr = mlx_get_data_addr(texture->EA_img->img,
-			&texture->EA_img->bit_per_pixel,
-			&texture->EA_img->line_len, &texture->EA_img->endian);
+			&texture->EA_img->bit_per_pixel, &texture->EA_img->line_len,
+			&texture->EA_img->endian);
 	texture->WE_img->addr = mlx_get_data_addr(texture->WE_img->img,
-			&texture->WE_img->bit_per_pixel,
-			&texture->WE_img->line_len, &texture->WE_img->endian);
+			&texture->WE_img->bit_per_pixel, &texture->WE_img->line_len,
+			&texture->WE_img->endian);
 	texture->SO_img->addr = mlx_get_data_addr(texture->SO_img->img,
-			&texture->SO_img->bit_per_pixel,
-			&texture->SO_img->line_len, &texture->SO_img->endian);
+			&texture->SO_img->bit_per_pixel, &texture->SO_img->line_len,
+			&texture->SO_img->endian);
+	texture->Door_img->addr = mlx_get_data_addr(texture->Door_img->img,
+			&texture->Door_img->bit_per_pixel, &texture->Door_img->line_len,
+			&texture->Door_img->endian);
 	if (!texture->NO_img->addr || !texture->SO_img->addr
-		|| !texture->WE_img->addr || !texture->EA_img->addr)
+		|| !texture->WE_img->addr || !texture->EA_img->addr
+		|| !texture->Door_img->addr)
 	{
 		ft_putendl_fd("Error: Address Failed to load textures.", STDERR);
 		ft_malloc(CLEAR, CLEAR);
@@ -53,6 +58,7 @@ void	init_textures_data(t_data_game *_game)
 	_game->texture->SO_img = ft_malloc(sizeof(t_imag), ALLOC);
 	_game->texture->WE_img = ft_malloc(sizeof(t_imag), ALLOC);
 	_game->texture->EA_img = ft_malloc(sizeof(t_imag), ALLOC);
+	_game->texture->Door_img = ft_malloc(sizeof(t_imag), ALLOC);
 	texture = _game->texture;
 	texture->NO_img->img = mlx_xpm_file_to_image(_game->_mlx, texture->NO,
 			&texture->NO_img->width, &texture->NO_img->height);
@@ -62,8 +68,10 @@ void	init_textures_data(t_data_game *_game)
 			&texture->WE_img->width, &texture->WE_img->height);
 	texture->EA_img->img = mlx_xpm_file_to_image(_game->_mlx, texture->EA,
 			&texture->EA_img->width, &texture->EA_img->height);
-	if (!texture->NO_img->img || !texture->SO_img->img
-		|| !texture->WE_img->img || !texture->EA_img->img)
+	texture->Door_img->img = mlx_xpm_file_to_image(_game->_mlx, texture->Door,
+			&texture->Door_img->width, &texture->Door_img->height);
+	if (!texture->NO_img->img || !texture->SO_img->img || !texture->WE_img->img
+		|| !texture->EA_img->img || !texture->Door_img->img)
 	{
 		ft_putendl_fd("Error: Failed to load textures.", STDERR);
 		ft_malloc(CLEAR, CLEAR);
