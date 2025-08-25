@@ -29,11 +29,11 @@
 
 # define WINDOW_WIDTH 1280 // cols
 # define WINDOW_HEIGHT 736 // rows
-# define TILE_SIZE 32
+# define TILE_SIZE 64 
 # define PI 3.141592653589793
 # define FOV 1.0471975511965976
 //60 * (PI / 180) // <- convert in radin (degree * 180/PI)
-# define MOVE_SPEED 2
+# define MOVE_SPEED 5 
 # define ROTATION_SPEED 0.2618
 # define NUM_RAYS 200
 // color
@@ -146,6 +146,7 @@ typedef struct s_texture
 	char		*SO;
 	char		*WE;
 	char		*EA;
+	t_imag *dr_img;
 	t_imag		*NO_img;
 	t_imag		*SO_img;
 	t_imag		*WE_img;
@@ -154,6 +155,7 @@ typedef struct s_texture
 
 typedef struct	s_wall_slice
 {
+	bool is_door;
 	double		perp_dist;
 	double		wall_height;
 	double		alpha;
@@ -167,6 +169,9 @@ typedef struct	s_wall_slice
 
 typedef struct s_game
 {
+	bool is_door;
+	bool is_door_h;
+	bool is_door_v;
 	short		fd;
 	short		size;
 	char		**map;
@@ -328,4 +333,7 @@ void			validate_textures_and_colors(t_config *_config,
 					t_data_game *_game);
 void			draw_minimap(t_data_game *_game);
 void			init_textures_data(t_data_game *_game);
+
+
+void	_draw_line(t_data_game *g, t_point start, t_point end, int color);
 #endif

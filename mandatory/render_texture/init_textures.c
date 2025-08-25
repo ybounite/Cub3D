@@ -36,7 +36,11 @@ void	init_textures_address(t_texture *texture, t_data_game *_game)
 	texture->SO_img->addr = mlx_get_data_addr(texture->SO_img->img,
 			&texture->SO_img->bit_per_pixel,
 			&texture->SO_img->line_len, &texture->SO_img->endian);
-	if (!texture->NO_img->addr || !texture->SO_img->addr
+	texture->dr_img->addr = mlx_get_data_addr(texture->dr_img->img,
+			&texture->dr_img->bit_per_pixel,
+			&texture->dr_img->line_len, &texture->dr_img->endian);
+
+	if (!texture->NO_img->addr || !texture->SO_img->addr || !texture->dr_img->addr
 		|| !texture->WE_img->addr || !texture->EA_img->addr)
 	{
 		ft_putendl_fd("Error: Address Failed to load textures.", STDERR);
@@ -53,6 +57,7 @@ void	init_textures_data(t_data_game *_game)
 	_game->texture->SO_img = ft_malloc(sizeof(t_imag), ALLOC);
 	_game->texture->WE_img = ft_malloc(sizeof(t_imag), ALLOC);
 	_game->texture->EA_img = ft_malloc(sizeof(t_imag), ALLOC);
+	_game->texture->dr_img = ft_malloc(sizeof(t_imag), ALLOC);
 	texture = _game->texture;
 	texture->NO_img->img = mlx_xpm_file_to_image(_game->_mlx, texture->NO,
 			&texture->NO_img->width, &texture->NO_img->height);
@@ -62,7 +67,9 @@ void	init_textures_data(t_data_game *_game)
 			&texture->WE_img->width, &texture->WE_img->height);
 	texture->EA_img->img = mlx_xpm_file_to_image(_game->_mlx, texture->EA,
 			&texture->EA_img->width, &texture->EA_img->height);
-	if (!texture->NO_img->img || !texture->SO_img->img
+	texture->dr_img->img = mlx_xpm_file_to_image(_game->_mlx, "textures/door2.xpm",
+			&texture->dr_img->width, &texture->dr_img->height);
+	if (!texture->NO_img->img || !texture->SO_img->img || !texture->dr_img->img
 		|| !texture->WE_img->img || !texture->EA_img->img)
 	{
 		ft_putendl_fd("Error: Failed to load textures.", STDERR);

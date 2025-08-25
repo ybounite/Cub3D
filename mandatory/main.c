@@ -70,11 +70,11 @@ int	render(t_data_game *g)
 	{
 		clear_image(g->_img, 0x000000);
 		draw_sky_and_floor(g);
-		//>draw_map(g);
+		// draw_map(g);
 		_cast_all_rays(g);
-		//>sdraw_line(g);
+		//sdraw_line(g);
 	        //cast_ray(g, &ray);
-		//_draw_line(g, ray.player, ray.hit, 0xFFFFFF);
+		//_draw_line(g, g->ray.player, g->ray.hit, 0xFFFFFF);
 		draw_minimap(g);
 		mlx_put_image_to_window(g->_mlx, g->_win_mlx, g->_img->img, 0, 0);
 		frame = 0;

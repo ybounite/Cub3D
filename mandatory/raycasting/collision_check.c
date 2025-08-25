@@ -26,12 +26,15 @@ bool	is_wall(t_data_game *_game, double x, double y)
 	int	grid_x;
 	int	grid_y;
 
+	_game->is_door = false;
 	grid_x = (int)(x / TILE_SIZE);
 	grid_y = (int)(y / TILE_SIZE);
 	if (grid_x < 0 || grid_y < 0 || grid_y >= _game->map_height || grid_x >= _game->map_width)
 		return (true);
-	if (_game->map[grid_y][grid_x] == '1' || _game->map[grid_y][grid_x] == 'D')
+	if (_game->map[grid_y][grid_x] == '1')
 		return (true);
+	if ( _game->map[grid_y][grid_x] == 'D')
+		return (printf("door\n"),_game->is_door = true, true);
 	return (false);
 }
 

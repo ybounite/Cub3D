@@ -36,9 +36,11 @@ bool	cast_horizontal(t_data_game *g, t_ray *ray, t_point *hit, double *dist)
 		next_x < g->map_width * TILE_SIZE &&
 		next_y < g->map_height * TILE_SIZE)
 	{
-		int map_x = (int)(next_x / TILE_SIZE);
-		int map_y = (int)((next_y + (is_facing_up(ray->ray_angle) ? -1 : 0)) / TILE_SIZE);
-		if (g->map[map_y][map_x] == '1') {
+		int map_x = (int)next_x;
+		int map_y = (int)(next_y + (is_facing_up(ray->ray_angle) ? -1 : 0));
+		if (is_wall(g, map_x, map_y)) {
+			if (g->is_door)
+				g->is_door_h = true;
 			*hit = (t_point){next_x, next_y};
 			*dist = hypot(next_x - ray->player.x, next_y - ray->player.y);
 			return true;
