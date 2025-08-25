@@ -6,7 +6,7 @@
 /*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 14:57:09 by ybounite          #+#    #+#             */
-/*   Updated: 2025/08/24 11:06:59 by bamezoua         ###   ########.fr       */
+/*   Updated: 2025/08/25 13:36:48 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ enum	t_keycodes
 	A_KEY = 'a',
 	S_KEY = 's',
 	D_KEY = 'd',
+	E_kEY = 'f',
 	ESCAPE = 65307,
 	LEFT_ARROW = 65361,
 	RIGHT_ARROW = 65363
@@ -85,7 +86,6 @@ typedef enum s_spawm_direction
 	SOUTH,
 	EAST,
 	WEST
-	// ESCAPE = 65307
 }			t_spawm_dir;
 
 typedef struct s_config
