@@ -16,6 +16,7 @@ void        cast_ray(t_data_game *g, t_ray *ray)
 {
         t_point (h_hit), (v_hit);
         double h_dist = 1e30, v_dist = 1e30;
+	g->is_door_h = false, g->is_door_v = false;
         bool h_found = cast_horizontal(g, ray, &h_hit, &h_dist);
         bool v_found = cast_vertical(g, ray, &v_hit, &v_dist);
 
@@ -52,6 +53,8 @@ t_imag        *choose_texture(t_data_game *g, t_ray *ray)
 {
         if (ray->was_hit_vertical == 1)
         {
+	        if (g->is_door_v)
+	                return (g->texture->dr_img);
                 if (is_facing_left(ray->ray_angle))
 
                         return (g->texture->WE_img);
@@ -60,6 +63,8 @@ t_imag        *choose_texture(t_data_game *g, t_ray *ray)
         }
         else
         {
+		if (g->is_door_h)
+                	return (g->texture->dr_img);
                 if (is_facing_down(ray->ray_angle))
                         return (g->texture->NO_img);
                 else
@@ -118,7 +123,7 @@ void        draw_wall_strip(t_data_game *_g, t_ray *ray, t_imag *tex, t_data_sli
                 d = (y + (sd.wall_height / 2.0)) - WINDOW_HEIGHT / 2.0;
                 d *= tex->height;
                 sd.tex_y = d / sd.wall_height;
-                sd.alpha = 1.0 - (ray->distance / 800);
+                sd.alpha = 1.0 - (ray->distance / 2000);
                 color = get_pixel(tex, sd.tex_x, sd.tex_y); 
                 if (sd.alpha < 0)
                         sd.alpha = 0;
@@ -148,6 +153,22 @@ void        _render_wall_slice(t_data_game *_g, t_ray *ray, int i)
         draw_wall_strip(_g, ray, tex, slic);
 }
 
+t_point    construct_point(double x, double y)
+{
+        t_point p;
+        p.x = x;
+        p.y = y;
+        return p;
+}
+
+void    printInfo(t_data_game *g)
+{
+        printf("distance : %f\n", g->ray.distance);
+        printf("horisontal : %s\n", g->ray.was_hit_vertical == 0 ? "true" : "false");
+         printf("vertical : %s\n", g->ray.was_hit_vertical == 1 ? "true" : "false");
+         printf("is %s\n" , g->is_door ? "door" : "wall");
+         printf("=======================\n");
+}
 void        _cast_all_rays(t_data_game *_game)
 {
         t_ray        ray;
@@ -159,7 +180,9 @@ void        _cast_all_rays(t_data_game *_game)
         {
                 normalize_angle(&ray.ray_angle);
                 cast_ray(_game, &ray);
-                _render_wall_slice(_game, &ray, i);
+                //_draw_line(_game, construct_point(_game->player->_x, _game->player->_y), ray.hit, YELLOW);
+                //printInfo(_game);               
+		_render_wall_slice(_game, &ray, i);
                 ray.ray_angle += ray.step_angle;
                 i++;
         }
