@@ -6,7 +6,7 @@
 /*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 14:57:09 by ybounite          #+#    #+#             */
-/*   Updated: 2025/08/23 09:41:18 by bamezoua         ###   ########.fr       */
+/*   Updated: 2025/08/24 11:06:59 by bamezoua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,11 +146,16 @@ typedef struct s_texture
 	char		*SO;
 	char		*WE;
 	char		*EA;
+<<<<<<< HEAD
 	t_imag *dr_img;
+=======
+	char		*Door;
+>>>>>>> 843938568d64852f4f288043d708b420f1babcc0
 	t_imag		*NO_img;
 	t_imag		*SO_img;
 	t_imag		*WE_img;
 	t_imag		*EA_img;
+	t_imag		*Door_img;
 }			t_texture;
 
 typedef struct	s_wall_slice
