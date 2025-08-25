@@ -6,7 +6,7 @@
 /*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/14 16:53:10 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/31 14:11:34 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/08/25 14:23:20 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,18 +57,18 @@ t_imag        *choose_texture(t_data_game *g, t_ray *ray)
 	                return (g->texture->dr_img);
                 if (is_facing_left(ray->ray_angle))
 
-                        return (g->texture->WE_img);
+                        return (g->texture->we_img);
                 else
-                        return (g->texture->EA_img);
+                        return (g->texture->ea_img);
         }
         else
         {
 		if (g->is_door_h)
                 	return (g->texture->dr_img);
                 if (is_facing_down(ray->ray_angle))
-                        return (g->texture->NO_img);
+                        return (g->texture->no_img);
                 else
-                        return (g->texture->SO_img);
+                        return (g->texture->so_img);
         }
 }
 
@@ -114,8 +114,8 @@ void        draw_wall_strip(t_data_game *_g, t_ray *ray, t_imag *tex, t_data_sli
 {
         int                y;
         int                d;
-        unsigned int        color;
-        unsigned int        final_color;
+        unsigned int       color;
+        unsigned int       final_color;
 
         y = sd.wall_top;
         while (y < sd.wall_bottome)
@@ -153,22 +153,6 @@ void        _render_wall_slice(t_data_game *_g, t_ray *ray, int i)
         draw_wall_strip(_g, ray, tex, slic);
 }
 
-t_point    construct_point(double x, double y)
-{
-        t_point p;
-        p.x = x;
-        p.y = y;
-        return p;
-}
-
-void    printInfo(t_data_game *g)
-{
-        printf("distance : %f\n", g->ray.distance);
-        printf("horisontal : %s\n", g->ray.was_hit_vertical == 0 ? "true" : "false");
-         printf("vertical : %s\n", g->ray.was_hit_vertical == 1 ? "true" : "false");
-         printf("is %s\n" , g->is_door ? "door" : "wall");
-         printf("=======================\n");
-}
 void        _cast_all_rays(t_data_game *_game)
 {
         t_ray        ray;
@@ -180,8 +164,6 @@ void        _cast_all_rays(t_data_game *_game)
         {
                 normalize_angle(&ray.ray_angle);
                 cast_ray(_game, &ray);
-                //_draw_line(_game, construct_point(_game->player->_x, _game->player->_y), ray.hit, YELLOW);
-                //printInfo(_game);               
 		_render_wall_slice(_game, &ray, i);
                 ray.ray_angle += ray.step_angle;
                 i++;
