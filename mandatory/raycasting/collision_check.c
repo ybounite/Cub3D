@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   collision_check.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybounite <ybounite@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/14 15:19:47 by ybounite          #+#    #+#             */
-/*   Updated: 2025/08/23 10:54:35 by bamezoua         ###   ########.fr       */
+/*   Created: 2025/08/25 14:17:10 by ybounite          #+#    #+#             */
+/*   Updated: 2025/08/25 14:17:20 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ bool	is_wall(t_data_game *_game, double x, double y)
 	if (_game->map[grid_y][grid_x] == '1')
 		return (true);
 	if ( _game->map[grid_y][grid_x] == 'D')
-		return (printf("door\n"),_game->is_door = true, true);
+		return (_game->is_door = true, true);
 	return (false);
 }
-
