@@ -142,25 +142,21 @@ typedef struct s_ray
 
 typedef struct s_texture
 {
-	char		*NO;
-	char		*SO;
-	char		*WE;
-	char		*EA;
-<<<<<<< HEAD
-	t_imag *dr_img;
-=======
-	char		*Door;
->>>>>>> 843938568d64852f4f288043d708b420f1babcc0
-	t_imag		*NO_img;
-	t_imag		*SO_img;
-	t_imag		*WE_img;
-	t_imag		*EA_img;
-	t_imag		*Door_img;
+	char		*no;
+	char		*so;
+	char		*we;
+	char		*ea;
+	char		*door;
+	t_imag		*dr_img;
+	t_imag		*no_img;
+	t_imag		*so_img;
+	t_imag		*we_img;
+	t_imag		*ea_img;
 }			t_texture;
 
 typedef struct	s_wall_slice
 {
-	bool is_door;
+	bool		is_door;
 	double		perp_dist;
 	double		wall_height;
 	double		alpha;
