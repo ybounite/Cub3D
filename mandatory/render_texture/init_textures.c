@@ -19,7 +19,7 @@ void	init_textures(t_data_game *_game)
 	_game->texture->SO = _game->config->textures[SO_TEXTURE];
 	_game->texture->WE = _game->config->textures[WE_TEXTURE];
 	_game->texture->EA = _game->config->textures[EA_TEXTURE];
-	_game->texture->Door = "./textures/open-door.xpm";
+	_game->texture->door = "./textures/open-door.xpm";
 }
 
 void	init_textures_address(t_texture *texture, t_data_game *_game)

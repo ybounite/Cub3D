@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamezoua <bamezoua@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybounite <ybounite@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/01 09:52:58 by bamezoua          #+#    #+#             */
-/*   Updated: 2025/08/23 16:30:09 by bamezoua         ###   ########.fr       */
+/*   Created: 2025/08/25 13:28:02 by ybounite          #+#    #+#             */
+/*   Updated: 2025/08/25 13:29:31 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,8 @@ void			*ft_calloc(size_t nmemb, size_t size);
 char			*ft_itoa(int n);
 int				ft_lstsize(t_list *lst);
 t_list			*ft_lstnew(void *content);
-void			ft_lstadd_back(t_list **lst, t_list *new);
-void			ft_lstadd_front(t_list **lst, t_list *new);
+void			ft_lstadd_back(t_list **lst, t_list *_new);
+void			ft_lstadd_front(t_list **lst, t_list *_new);
 void			ft_lstclear(t_list **lst, void (*del)(void *));
 void			ft_lstiter(t_list *lst, void (*f)(void *));
 t_list			*ft_lstlast(t_list *lst);
