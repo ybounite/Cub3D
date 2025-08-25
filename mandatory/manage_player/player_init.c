@@ -6,7 +6,7 @@
 /*   By: ybounite <ybounite@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 14:41:31 by ybounite          #+#    #+#             */
-/*   Updated: 2025/07/31 11:25:50 by ybounite         ###   ########.fr       */
+/*   Updated: 2025/08/25 13:24:34 by ybounite         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	player_init(t_data_game *_game)
 	player_position(_game);
 	init_player_direction(_game, _game->spawm_dir);
 	// convert postion player maps to window *TITL_SIZE + (TITL_SIZE / 2)
-	_game->player->_x = (_game->player->_x * TILE_SIZE) + TILE_SIZE / 2;
-	_game->player->_y = (_game->player->_y * TILE_SIZE) + TILE_SIZE / 2;
+	_game->player->_x = (_game->player->_x * TILE_SIZE) + TILE_SIZE / 2.0;
+	_game->player->_y = (_game->player->_y * TILE_SIZE) + TILE_SIZE / 2.0;
 	// printf("postion palyer ot window --> x %f <-- and --> y %f <--\n", _game->player->_x, _game->player->_y);
 }
